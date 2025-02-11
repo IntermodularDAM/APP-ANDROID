@@ -1,4 +1,4 @@
-package leo.rios.officium.core.dataStore
+package dam.intermodular.app.core.dataStore
 
 import androidx.datastore.preferences.core.stringPreferencesKey
 

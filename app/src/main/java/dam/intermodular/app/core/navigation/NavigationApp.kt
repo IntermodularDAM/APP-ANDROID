@@ -1,4 +1,4 @@
-package leo.rios.officium.core.navigation
+package dam.intermodular.app.core.navigation
 
 import androidx.compose.runtime.Composable
 
@@ -9,9 +9,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 
-import leo.rios.officium.home.presentation.views.HomeScreen
-import leo.rios.officium.login.presentation.viewModel.LoginViewModel
-import leo.rios.officium.login.presentation.views.LoginScreen
+import dam.intermodular.app.home.presentation.views.HomeScreen
+import dam.intermodular.app.login.presentation.viewModel.LoginViewModel
+import dam.intermodular.app.login.presentation.views.LoginScreen
 
 
 @Composable

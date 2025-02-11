@@ -1,10 +1,9 @@
-package leo.rios.officium.core.api
+package dam.intermodular.app.core.api
 
-import leo.rios.officium.login.data.LoginResponse
-import leo.rios.officium.login.presentation.model.LogInModel
+import dam.intermodular.app.login.data.LoginResponse
+import dam.intermodular.app.login.presentation.model.LogInModel
 import retrofit2.Response
 import retrofit2.http.Body
-import retrofit2.http.GET
 import retrofit2.http.POST
 
 interface ApiService {

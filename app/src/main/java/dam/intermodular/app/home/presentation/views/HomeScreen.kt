@@ -1,4 +1,4 @@
-package leo.rios.officium.home.presentation.views
+package dam.intermodular.app.home.presentation.views
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer

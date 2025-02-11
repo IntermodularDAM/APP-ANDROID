@@ -1,5 +1,6 @@
-package leo.rios.officium.core.navigation.type
+package dam.intermodular.app.core.navigation.type
 
+import android.annotation.SuppressLint
 import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
@@ -9,6 +10,7 @@ import kotlinx.serialization.json.Json
 
 inline fun<reified T : Parcelable> createNavType() : NavType<T> {
     return  object : NavType<T>(isNullableAllowed = true){
+        @SuppressLint("NewApi")
         override fun get(bundle: Bundle, key: String): T? {
             return bundle.getParcelable(key, T::class.java)
         }

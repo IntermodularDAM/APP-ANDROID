@@ -1,11 +1,10 @@
-package leo.rios.officium.login.domain
+package dam.intermodular.app.login.domain
 
 import android.util.Log
-import androidx.datastore.dataStore
-import leo.rios.officium.core.api.ApiService
-import leo.rios.officium.core.dataStore.DataStoreManager
-import leo.rios.officium.login.data.LoginResponse
-import leo.rios.officium.login.presentation.model.LogInModel
+import dam.intermodular.app.core.api.ApiService
+import dam.intermodular.app.core.dataStore.DataStoreManager
+import dam.intermodular.app.login.data.LoginResponse
+import dam.intermodular.app.login.presentation.model.LogInModel
 import javax.inject.Inject
 
 class LogInRepository @Inject constructor (

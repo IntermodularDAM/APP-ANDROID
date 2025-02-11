@@ -1,4 +1,4 @@
-package leo.rios.officium.login.presentation.composables
+package dam.intermodular.app.login.presentation.composables
 
 
 import androidx.compose.foundation.layout.fillMaxWidth

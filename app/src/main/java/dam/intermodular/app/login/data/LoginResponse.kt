@@ -1,4 +1,4 @@
-package leo.rios.officium.login.data
+package dam.intermodular.app.login.data
 
 import kotlinx.serialization.SerialName
 import java.util.Date

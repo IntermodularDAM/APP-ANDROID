@@ -1,4 +1,4 @@
-package leo.rios.officium.core.dataStore
+package dam.intermodular.app.core.dataStore
 
 import android.content.Context
 import androidx.datastore.core.DataStore
