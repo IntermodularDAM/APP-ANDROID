@@ -1,7 +1,6 @@
-package leo.rios.officium.login.presentation.viewModel
+package dam.intermodular.app.login.presentation.viewModel
 
 import android.util.Log
-import androidx.datastore.dataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
@@ -9,11 +8,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import leo.rios.officium.core.api.ApiService
-import leo.rios.officium.core.dataStore.DataStoreManager
-import leo.rios.officium.core.navigation.Home
-import leo.rios.officium.login.domain.LogInRepository
-import leo.rios.officium.login.presentation.model.LogInModel
+import dam.intermodular.app.core.dataStore.DataStoreManager
+import dam.intermodular.app.core.navigation.Home
+import dam.intermodular.app.login.domain.LogInRepository
+import dam.intermodular.app.login.presentation.model.LogInModel
 import javax.inject.Inject
 
 @HiltViewModel
@@ -82,14 +80,14 @@ class LoginViewModel @Inject constructor(
                 val loginResponse = result.getOrNull()
                 if(loginResponse != null){
                     Log.d("Login Exitoso", "Datos del usuario: ${loginResponse.data}")
-                    dataStoreManager.guardarTokens(
+                   /* dataStoreManager.guardarTokens(
                         loginResponse.data.token,
                         loginResponse.data.appToken,
                         loginResponse.data.user.rol
-                    )
+                    )*/
                     _token.value = loginResponse.data.token
                     _authState.value = "Login exitoso"
-                    navigateTo.navigate(Home)
+                    navigateTo.navigate("main_screen")
 
                 }else{
                     _authState.value = result.exceptionOrNull()?.localizedMessage ?: "Error desconocido"

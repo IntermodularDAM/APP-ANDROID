@@ -1,4 +1,4 @@
-package leo.rios.officium.login.presentation.model
+package dam.intermodular.app.login.presentation.model
 
 data class LogInModel (
     val email : String,

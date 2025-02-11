@@ -1,4 +1,4 @@
-package leo.rios.officium.core.api
+package dam.intermodular.app.core.api
 
 
 import android.content.Context
@@ -10,7 +10,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import leo.rios.officium.core.dataStore.DataStoreManager
+import dam.intermodular.app.core.dataStore.DataStoreManager
 import javax.inject.Singleton
 
 @Module
@@ -28,7 +28,7 @@ object ApiClient {
 
     @Singleton
     @Provides
-    fun provideApiService(retrofit: Retrofit) :ApiService{
+    fun provideApiService(retrofit: Retrofit) : ApiService {
         return retrofit.create(ApiService::class.java)
     }
 
@@ -36,7 +36,7 @@ object ApiClient {
 
     @Singleton
     @Provides
-    fun provideDataStore(context: Context) :DataStoreManager{
+    fun provideDataStore(context: Context) : DataStoreManager {
         return DataStoreManager(context)
     }
 

@@ -1,4 +1,4 @@
-package leo.rios.officium.core.navigation
+package dam.intermodular.app.core.navigation
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
@@ -11,13 +11,16 @@ object Splash
 object Login
 
 @Serializable
+object MainScreen
+
+@Serializable
 object Home
 
 @Serializable
 data class Detail(val name: String)
 
 @Serializable
-data class Settings(val info:SettingsInfo)
+data class Settings(val info: SettingsInfo)
 
 @Parcelize
 @Serializable

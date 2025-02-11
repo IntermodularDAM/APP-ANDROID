@@ -1,23 +1,30 @@
-package leo.rios.officium.core.navigation
+package dam.intermodular.app.core.navigation
 
 import androidx.compose.runtime.Composable
 
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import dam.intermodular.app.habitaciones.FavoritesScreen
+import dam.intermodular.app.habitaciones.HabitacionesViewModel
+import dam.intermodular.app.habitaciones.MainScreen
+import dam.intermodular.app.habitaciones.RoomDetailsFragment
 
-import leo.rios.officium.home.presentation.views.HomeScreen
-import leo.rios.officium.login.presentation.viewModel.LoginViewModel
-import leo.rios.officium.login.presentation.views.LoginScreen
+import dam.intermodular.app.home.presentation.views.HomeScreen
+import dam.intermodular.app.login.presentation.viewModel.LoginViewModel
+import dam.intermodular.app.login.presentation.views.LoginScreen
 
 
 @Composable
 fun NavigationApp(){
     val navController = rememberNavController()
-    val  viewModelLogin : LoginViewModel = viewModel()
+    val viewModelLogin : LoginViewModel = viewModel()
+    val habitacionesViewModel: HabitacionesViewModel = viewModel()
     val authState by viewModelLogin.authState.collectAsState()
     val token by viewModelLogin.authState.collectAsState()
     val isChekingToken by viewModelLogin.isCheckingToken.collectAsState()
@@ -35,6 +42,34 @@ fun NavigationApp(){
         }
         composable<Home>{
             HomeScreen{ name -> navController.navigate(Detail(name = name))}
+        }
+        composable("main_screen") {
+            MainScreen(navController, habitacionesViewModel)
+        }
+        composable("favorites_screen") {
+            FavoritesScreen(navController, habitacionesViewModel)
+        }
+        composable(
+            "room_details_screen/{roomName}/{roomDescription}/{roomPrice}/{roomImage}",
+            arguments = listOf(
+                navArgument("roomName") { type = NavType.StringType },
+                navArgument("roomDescription") { type = NavType.StringType },
+                navArgument("roomPrice") { type = NavType.StringType },
+                navArgument("roomImage") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val roomName = backStackEntry.arguments?.getString("roomName") ?: ""
+            val roomDescription = backStackEntry.arguments?.getString("roomDescription") ?: ""
+            val roomPrice = backStackEntry.arguments?.getString("roomPrice") ?: ""
+            val roomImage = backStackEntry.arguments?.getString("roomImage") ?: ""
+
+            RoomDetailsFragment(
+                navController = navController,
+                roomName = roomName,
+                roomDescription = roomDescription,
+                roomPrice = roomPrice,
+                roomImage = roomImage
+            )
         }
 
     }

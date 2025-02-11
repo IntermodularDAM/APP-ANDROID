@@ -1,16 +1,14 @@
-package leo.rios.officium.core.dataStore
+package dam.intermodular.app.core.dataStore
 
 import android.content.Context
 import android.util.Base64
-import androidx.compose.ui.semantics.Role
 import androidx.datastore.preferences.core.edit
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
-import leo.rios.officium.core.tinkCrypt.TinkManager
+import dam.intermodular.app.core.tinkCrypt.TinkManager
 import javax.inject.Inject
 
 
@@ -18,6 +16,10 @@ class DataStoreManager @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
     private val tinkManager= TinkManager(context)
+
+    val favoritos: Flow<Set<String>> = context.dataStore.data.map { preferences ->
+        preferences[FAVORITES_KEY] ?: emptySet()  // Si no existe, retornamos un set vacío
+    }
 
     suspend fun guardarTokens(accessToken: String, applicationToken: String, role: String){
         withContext(Dispatchers.IO){
@@ -68,6 +70,24 @@ class DataStoreManager @Inject constructor(
                 preferences.remove(APPLICATION_TOKEN_KEY)
                 preferences.remove(ACCESS_ROLE_KEY)
             }
+        }
+    }
+
+    // Función para agregar o quitar favoritos en el DataStore
+    suspend fun toggleFavorite(id: String) {
+        context.dataStore.edit { preferences ->
+            // Obtenemos los favoritos actuales (si existen)
+            val currentFavorites = preferences[FAVORITES_KEY] ?: emptySet()
+
+            // Determinamos si agregar o quitar el ID del favorito
+            val newFavorites = if (id in currentFavorites) {
+                currentFavorites - id  // Si ya es favorito, lo quitamos
+            } else {
+                currentFavorites + id  // Si no es favorito, lo agregamos
+            }
+
+            // Guardamos el nuevo conjunto de favoritos
+            preferences[FAVORITES_KEY] = newFavorites
         }
     }
 }

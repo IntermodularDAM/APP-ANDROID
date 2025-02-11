@@ -1,4 +1,4 @@
-package leo.rios.officium.core.tinkCrypt
+package dam.intermodular.app.core.tinkCrypt
 
 import android.content.Context
 import com.google.crypto.tink.Aead
