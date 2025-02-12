@@ -31,8 +31,9 @@ class DataStoreManager @Inject constructor(
 
             context.dataStore.edit { preference ->
                 preference[ACCESS_TOKEN_KEY] = encryptAccessString
-                preference[ACCESS_ROLE_KEY] = encryptApplicationString
-                preference[APPLICATION_TOKEN_KEY] = role
+                preference[APPLICATION_TOKEN_KEY] = encryptApplicationString
+                preference[ACCESS_ROLE_KEY] = role
+
             }
         }
     }
@@ -49,8 +50,8 @@ class DataStoreManager @Inject constructor(
 
     fun getApplicationToken(): Flow<String?>{
         return context.dataStore.data.map { preferences ->
-            preferences[APPLICATION_TOKEN_KEY]?.let { dato ->
-                val encryptedApplication = Base64.decode(dato, Base64.DEFAULT)
+            preferences[APPLICATION_TOKEN_KEY]?.let { data ->
+                val encryptedApplication = Base64.decode(data, Base64.DEFAULT)
                 val decryptedApplication = tinkManager.aead.decrypt(encryptedApplication, null)
                 String(decryptedApplication)
             }

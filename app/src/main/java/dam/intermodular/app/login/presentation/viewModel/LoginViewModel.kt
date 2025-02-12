@@ -12,6 +12,7 @@ import dam.intermodular.app.core.dataStore.DataStoreManager
 import dam.intermodular.app.core.navigation.Home
 import dam.intermodular.app.login.domain.LogInRepository
 import dam.intermodular.app.login.presentation.model.LogInModel
+import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 @HiltViewModel
@@ -79,14 +80,20 @@ class LoginViewModel @Inject constructor(
             if (result.isSuccess){
                 val loginResponse = result.getOrNull()
                 if(loginResponse != null){
-                    Log.d("Login Exitoso", "Datos del usuario: ${loginResponse.data}")
-                   /* dataStoreManager.guardarTokens(
+                    Log.d("ViewMoidel: Login Exitoso", "Datos del usuario: ${loginResponse.data}")
+                    dataStoreManager.guardarTokens(
                         loginResponse.data.token,
                         loginResponse.data.appToken,
                         loginResponse.data.user.rol
-                    )*/
+                    )
                     _token.value = loginResponse.data.token
                     _authState.value = "Login exitoso"
+                    val tokenDataStore = dataStoreManager.getAccessToken().first()
+                    val tokenAppToken = dataStoreManager.getApplicationToken().first()
+                    val permisosRol = dataStoreManager.getRole().first()
+                    Log.d("ViewModel: Token","$tokenDataStore")
+                    Log.d("ViewModel: AppToken","$tokenAppToken")
+                    Log.d("ViewModel: Rol","$permisosRol")
                     navigateTo.navigate("main_screen")
 
                 }else{

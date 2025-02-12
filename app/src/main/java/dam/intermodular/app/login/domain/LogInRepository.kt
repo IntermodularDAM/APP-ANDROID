@@ -15,12 +15,12 @@ class LogInRepository @Inject constructor (
         return  try{
             val response = apiService.apiLogIn(logInModel)
             if (response.isSuccessful){
-                Log.d("Api Response","${response.body()}")
+                Log.d("Repository: Api Response","${response.body()}")
                 val loginResponse = response.body()
                 if(loginResponse != null){
                     dataStoreManager.guardarTokens(
                         loginResponse.data.token,
-                        loginResponse.data.token,
+                        loginResponse.data.appToken,
                         loginResponse.data.user.rol
                     )
                     Result.success(loginResponse)
