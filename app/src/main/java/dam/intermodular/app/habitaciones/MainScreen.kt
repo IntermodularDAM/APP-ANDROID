@@ -22,7 +22,9 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import dam.intermodular.app.R
@@ -75,9 +77,16 @@ fun MainScreen(navController: NavHostController, habitacionesViewModel: Habitaci
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Column {
-                    Text(text = "Location", style = MaterialTheme.typography.bodyLarge.copy(color = Color.Gray))
-                    Text(text = "Night Days", style = MaterialTheme.typography.titleLarge)
+                Box(
+                    modifier = Modifier.fillMaxWidth(), // Ocupa todo el espacio disponible
+                    contentAlignment = Alignment.Center // Centra el contenido del Box
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally // Centra los textos dentro del Column
+                    ) {
+                        Text(text = "Location", style = MaterialTheme.typography.bodyLarge.copy(color = Color.Gray))
+                        Text(text = "Night Days", style = MaterialTheme.typography.titleLarge)
+                    }
                 }
             }
 
@@ -181,12 +190,12 @@ fun RoomCard(
     Card(
         modifier = Modifier
             .padding(8.dp)
-            .height(200.dp)
+            .height(235.dp)
             .clickable { onClick() },
         shape = RoundedCornerShape(8.dp)
     ) {
         Column {
-            habitacion.imagenBase64?.let { base64String ->
+            habitacion.imagenBase64.let { base64String ->
                 base64ToImageBitmap(base64String)?.let { imageBitmap ->
                     Image(
                         bitmap = imageBitmap,
@@ -207,12 +216,61 @@ fun RoomCard(
                         .height(100.dp)
                 )
             }
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(text = habitacion.nombre, modifier = Modifier.padding(8.dp))
-                IconButton(onClick = { habitacionesViewModel.toggleFavorite(habitacion) }) {
+            Box(modifier = Modifier.fillMaxSize()) {
+                // Content before the heart icon
+                Column(
+                    modifier = Modifier
+                        .padding(16.dp) // Adjust the padding as needed
+                        .align(Alignment.TopStart) // Positioning the content normally (top left, etc.)
+                ) {
+                    // Titulo de la habitacion
+                    Text(
+                        text = habitacion.nombre,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.Black,
+                        fontSize = 20.sp
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))  // Espacio entre nombre y precios
+
+                    // Mostrar el precio original con texto, tachado
+                    Text(
+                        text = "Original: €${"%.2f".format(habitacion.precio_noche_original ?: 0.0)}", // Precio original en euros
+                        style = MaterialTheme.typography.bodySmall.copy(textDecoration = TextDecoration.LineThrough),
+                        color = Color.Red
+                    )
+
+                    // Mostrar el precio por noche con texto
+                    Text(
+                        text = "Actual: €${"%.2f".format(habitacion.precio_noche)}", // Precio por noche en euros
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.Black
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))  // Espacio entre precios y opciones
+
+                    // Opción entre "Cama Extra" y "Cuna"
+                    val opcion = when {
+                        habitacion.opciones.CamaExtra == true -> "Cama Extra"
+                        habitacion.opciones.Cuna == true -> "Cuna"
+                        else -> "Ninguna opción"
+                    }
+
+                    Text(
+                        text = opcion,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color.Magenta
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+
+                // Heart icon positioned at the bottom-right corner
+                IconButton(
+                    onClick = { habitacionesViewModel.toggleFavorite(habitacion) },
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                ) {
                     Icon(
                         imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
                         contentDescription = "Toggle Favorite",

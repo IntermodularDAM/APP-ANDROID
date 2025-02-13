@@ -7,6 +7,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -54,11 +55,18 @@ fun RoomDetailsFragment(
             }
         }
 
-        // Título
-        Text(
-            text = "Detalles de la Habitación",
-            fontSize = 18.sp
-        )
+        Box(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(
+                text = "Detalles de la Habitación",
+                fontSize = 28.sp,
+                color = Color.Magenta,
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.align(Alignment.Center)
+            )
+        }
+
 
         // Título de la habitación
         Text(
