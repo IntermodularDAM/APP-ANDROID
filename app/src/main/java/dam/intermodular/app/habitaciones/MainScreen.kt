@@ -58,6 +58,11 @@ fun MainScreen(navController: NavHostController, habitacionesViewModel: Habitaci
         habitacionesViewModel.loadHabitaciones()
     }
 
+    // Función que aplica los filtros
+    val applyFilters = { priceRange: String?, capacity: String?, roomType: String?, options: String? ->
+        habitacionesViewModel.applyFilters(priceRange, capacity, roomType, options)
+    }
+
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
@@ -121,13 +126,23 @@ fun MainScreen(navController: NavHostController, habitacionesViewModel: Habitaci
                                 val encodedNombre = URLEncoder.encode(habitacion.nombre, StandardCharsets.UTF_8.toString())
                                 val encodedDescripcion = URLEncoder.encode(habitacion.descripcion, StandardCharsets.UTF_8.toString())
                                 val encodedImagenBase64 = URLEncoder.encode(habitacion.imagenBase64, StandardCharsets.UTF_8.toString())
-                                navController.navigate("room_details_screen/$encodedNombre/$encodedDescripcion/${habitacion.precio_noche}/$encodedImagenBase64")
+                                navController.navigate("room_details_screen/$encodedNombre/$encodedDescripcion/${habitacion.precio_noche}/$encodedImagenBase64/main_screen")
                             }
                         )
                     }
                 }
             }
         }
+
+        // Mostrar el cuadro de diálogo de filtro
+        FilterFragment(
+            isVisible = showFilterDialog.value,
+            onDismiss = { showFilterDialog.value = false },
+            applyFilters = { priceRange, capacity, roomType, options ->
+                applyFilters(priceRange, capacity, roomType, options)
+                showFilterDialog.value = false // Cerrar el diálogo después de aplicar los filtros
+            }
+        )
 
         Row(
             modifier = Modifier
@@ -152,6 +167,7 @@ fun MainScreen(navController: NavHostController, habitacionesViewModel: Habitaci
         }
     }
 }
+
 
 @SuppressLint("DefaultLocale")
 @Composable

@@ -4,6 +4,9 @@ import androidx.compose.runtime.Composable
 
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -13,6 +16,7 @@ import androidx.navigation.navArgument
 import dam.intermodular.app.habitaciones.FavoritesScreen
 import dam.intermodular.app.habitaciones.HabitacionesViewModel
 import dam.intermodular.app.habitaciones.MainScreen
+import dam.intermodular.app.habitaciones.Notification
 import dam.intermodular.app.habitaciones.RoomDetailsFragment
 
 import dam.intermodular.app.home.presentation.views.HomeScreen
@@ -28,7 +32,7 @@ fun NavigationApp(){
     val authState by viewModelLogin.authState.collectAsState()
     val token by viewModelLogin.authState.collectAsState()
     val isChekingToken by viewModelLogin.isCheckingToken.collectAsState()
-
+    val isVisible =
 
     NavHost(navController=navController, startDestination = Login)
     {
@@ -49,26 +53,37 @@ fun NavigationApp(){
         composable("favorites_screen") {
             FavoritesScreen(navController, habitacionesViewModel)
         }
+        composable("notificacion") {
+            var showNotification by remember { mutableStateOf(true) }
+
+            Notification(
+                isVisible = showNotification,
+                onDismiss = { showNotification = false }
+            )
+        }
         composable(
-            "room_details_screen/{roomName}/{roomDescription}/{roomPrice}/{roomImage}",
+            "room_details_screen/{roomName}/{roomDescription}/{roomPrice}/{roomImage}/{previousScreen}",
             arguments = listOf(
                 navArgument("roomName") { type = NavType.StringType },
                 navArgument("roomDescription") { type = NavType.StringType },
                 navArgument("roomPrice") { type = NavType.StringType },
-                navArgument("roomImage") { type = NavType.StringType }
+                navArgument("roomImage") { type = NavType.StringType },
+                navArgument("previousScreen") { type = NavType.StringType }
             )
         ) { backStackEntry ->
             val roomName = backStackEntry.arguments?.getString("roomName") ?: ""
             val roomDescription = backStackEntry.arguments?.getString("roomDescription") ?: ""
             val roomPrice = backStackEntry.arguments?.getString("roomPrice") ?: ""
             val roomImage = backStackEntry.arguments?.getString("roomImage") ?: ""
+            val previousScreen = backStackEntry.arguments?.getString("previousScreen") ?: "main_screen"
 
             RoomDetailsFragment(
                 navController = navController,
                 roomName = roomName,
                 roomDescription = roomDescription,
                 roomPrice = roomPrice,
-                roomImage = roomImage
+                roomImage = roomImage,
+                previousScreen = previousScreen
             )
         }
 

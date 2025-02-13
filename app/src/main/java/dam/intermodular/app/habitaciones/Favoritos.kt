@@ -33,7 +33,7 @@ fun FavoritesScreen(navController: NavController, habitacionesViewModel: Habitac
                             val encodedNombre = URLEncoder.encode(habitacion.nombre, StandardCharsets.UTF_8.toString())
                             val encodedDescripcion = URLEncoder.encode(habitacion.descripcion, StandardCharsets.UTF_8.toString())
                             val encodedImagenBase64 = URLEncoder.encode(habitacion.imagenBase64, StandardCharsets.UTF_8.toString())
-                            navController.navigate("room_details_screen/$encodedNombre/$encodedDescripcion/${habitacion.precio_noche}/$encodedImagenBase64")
+                            navController.navigate("room_details_screen/$encodedNombre/$encodedDescripcion/${habitacion.precio_noche}/$encodedImagenBase64/favourites_screen")
                         }
                     )
                     Spacer(modifier = Modifier.height(16.dp))

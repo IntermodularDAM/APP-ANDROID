@@ -3,12 +3,13 @@ package dam.intermodular.app.habitaciones
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -22,17 +23,37 @@ fun RoomDetailsFragment(
     roomName: String,
     roomDescription: String,
     roomPrice: String,
-    roomImage: String
+    roomImage: String,
+    previousScreen: String
 ) {
-    val context = LocalContext.current
+    //val context = LocalContext.current
     val defaultImage = painterResource(id = R.drawable.room_image) // Imagen por defecto
     val imageBitmap = base64ToImageBitmap(roomImage)
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Start
+        ){
+            IconButton(onClick = {
+                when(previousScreen) {
+                    "main_screen" -> navController.navigate("main_screen") { popUpTo("main_screen") { inclusive = true } }
+                    "favorites_screen" -> navController.navigate("favorites_screen") { popUpTo("favorites_screen") { inclusive = true } }
+                    else -> navController.popBackStack()
+                }
+            }) {
+                Icon(
+                    imageVector = Icons.Filled.ArrowBack,
+                    contentDescription = "Volver"
+                )
+            }
+        }
+
         // Título
         Text(
             text = "Detalles de la Habitación",
