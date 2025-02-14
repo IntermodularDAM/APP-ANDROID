@@ -102,7 +102,7 @@ fun RoomDetailsFragment(
                     append("Nombre de la habitación: ")
                 }
                 withStyle(style = SpanStyle(color = Color.Black)) {
-                    append("$roomName")
+                    append(roomName)
                 }
             },
             fontSize = 20.sp,
@@ -112,14 +112,14 @@ fun RoomDetailsFragment(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-// Descripción
+        // Descripción
         Text(
             text = buildAnnotatedString {
                 withStyle(style = SpanStyle(color = Color.Magenta)) {
                     append("Descripción: ")
                 }
                 withStyle(style = SpanStyle(color = Color.Black)) {
-                    append("$roomDescription")
+                    append(roomDescription)
                 }
             },
             style = MaterialTheme.typography.bodyMedium,
@@ -129,7 +129,7 @@ fun RoomDetailsFragment(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-// Precio de la habitación
+        // Precio de la habitación
         Text(
             text = buildAnnotatedString {
                 withStyle(style = SpanStyle(color = Color.Magenta)) {
@@ -146,7 +146,7 @@ fun RoomDetailsFragment(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-// Opciones extras
+        // Opciones extras
         Text(
             text = buildAnnotatedString {
                 withStyle(style = SpanStyle(color = Color.Magenta)) {

@@ -285,7 +285,7 @@ fun RoomCard(
                     }
 
                     Text(
-                        text = opcion,
+                        text = "Opcion:  $opcion",
                         style = MaterialTheme.typography.bodySmall,
                         color = Color.Magenta
                     )
