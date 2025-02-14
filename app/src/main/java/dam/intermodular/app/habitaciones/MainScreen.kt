@@ -50,6 +50,7 @@ fun MainScreen(navController: NavHostController, habitacionesViewModel: Habitaci
     val favoritos by habitacionesViewModel.favoritos.collectAsState()
 
     val showFilterDialog = remember { mutableStateOf(false) }
+    var showNotification by remember { mutableStateOf(false) }
     val searchQuery = remember { mutableStateOf("") }
 
     LaunchedEffect(searchQuery.value) {
@@ -86,6 +87,18 @@ fun MainScreen(navController: NavHostController, habitacionesViewModel: Habitaci
                     ) {
                         Text(text = "Location", style = MaterialTheme.typography.bodyLarge.copy(color = Color.Gray))
                         Text(text = "Night Days", style = MaterialTheme.typography.titleLarge)
+                    }
+
+                    IconButton(
+                        onClick = { showNotification = true }, // Al hacer clic, se abre la notificación
+                        modifier = Modifier
+                            .padding(end = 5.dp, top = 15.dp)
+                            .align(Alignment.TopEnd) // Posiciona el icono en la esquina superior derecha
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Notifications,
+                            contentDescription = "Notificaciones"
+                        )
                     }
                 }
             }
@@ -135,7 +148,8 @@ fun MainScreen(navController: NavHostController, habitacionesViewModel: Habitaci
                                 val encodedNombre = URLEncoder.encode(habitacion.nombre, StandardCharsets.UTF_8.toString())
                                 val encodedDescripcion = URLEncoder.encode(habitacion.descripcion, StandardCharsets.UTF_8.toString())
                                 val encodedImagenBase64 = URLEncoder.encode(habitacion.imagenBase64, StandardCharsets.UTF_8.toString())
-                                navController.navigate("room_details_screen/$encodedNombre/$encodedDescripcion/${habitacion.precio_noche}/$encodedImagenBase64/main_screen")
+                                val formattedPrecio = String.format("%.2f", habitacion.precio_noche)
+                                navController.navigate("room_details_screen/$encodedNombre/$encodedDescripcion/$formattedPrecio/$encodedImagenBase64/main_screen")
                             }
                         )
                     }
@@ -151,6 +165,12 @@ fun MainScreen(navController: NavHostController, habitacionesViewModel: Habitaci
                 applyFilters(priceRange, capacity, roomType, options)
                 showFilterDialog.value = false // Cerrar el diálogo después de aplicar los filtros
             }
+        )
+
+        // Mostrar el cuadro de notificaciones (en este caso son notificaciones permanentes)
+        Notification(
+            isVisible = showNotification,
+            onDismiss = { showNotification = false }
         )
 
         Row(
@@ -235,14 +255,14 @@ fun RoomCard(
 
                     // Mostrar el precio original con texto, tachado
                     Text(
-                        text = "Original: €${"%.2f".format(habitacion.precio_noche_original ?: 0.0)}", // Precio original en euros
+                        text = "Original: ${"%.2f".format(habitacion.precio_noche_original ?: 0.0)}€", // Precio original en euros
                         style = MaterialTheme.typography.bodySmall.copy(textDecoration = TextDecoration.LineThrough),
                         color = Color.Red
                     )
 
                     // Mostrar el precio por noche con texto
                     Text(
-                        text = "Actual: €${"%.2f".format(habitacion.precio_noche)}", // Precio por noche en euros
+                        text = "Actual: ${"%.2f".format(habitacion.precio_noche)}€", // Precio por noche en euros
                         style = MaterialTheme.typography.bodyMedium,
                         color = Color.Black
                     )

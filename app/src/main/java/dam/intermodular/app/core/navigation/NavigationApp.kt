@@ -53,14 +53,6 @@ fun NavigationApp(){
         composable("favorites_screen") {
             FavoritesScreen(navController, habitacionesViewModel)
         }
-        composable("notificacion") {
-            var showNotification by remember { mutableStateOf(true) }
-
-            Notification(
-                isVisible = showNotification,
-                onDismiss = { showNotification = false }
-            )
-        }
         composable(
             "room_details_screen/{roomName}/{roomDescription}/{roomPrice}/{roomImage}/{previousScreen}",
             arguments = listOf(
