@@ -12,6 +12,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -24,6 +28,7 @@ fun RoomDetailsFragment(
     roomName: String,
     roomDescription: String,
     roomPrice: String,
+    roomOption: String,
     roomImage: String,
     previousScreen: String
 ) {
@@ -34,12 +39,13 @@ fun RoomDetailsFragment(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+            .padding(18.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Start
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically
         ){
             IconButton(onClick = {
                 when(previousScreen) {
@@ -49,31 +55,23 @@ fun RoomDetailsFragment(
                 }
             }) {
                 Icon(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(end = 16.dp),
                     imageVector = Icons.Filled.ArrowBack,
                     contentDescription = "Volver"
                 )
             }
-        }
 
-        Box(
-            modifier = Modifier.fillMaxWidth()
-        ) {
             Text(
                 text = "Detalles de la Habitación",
                 fontSize = 28.sp,
                 color = Color.Magenta,
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.align(Alignment.Center)
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    fontWeight = FontWeight.Bold
+                )
             )
         }
-
-
-        // Título de la habitación
-        Text(
-            text = roomName,
-            fontSize = 22.sp,
-            style = MaterialTheme.typography.bodyMedium
-        )
 
         // Imagen de la habitación
         if (imageBitmap != null) {
@@ -82,7 +80,7 @@ fun RoomDetailsFragment(
                 contentDescription = "Imagen de la habitación",
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(200.dp)
+                    .height(400.dp)
                     .padding(bottom = 8.dp),
                 contentScale = ContentScale.Crop
             )
@@ -98,19 +96,72 @@ fun RoomDetailsFragment(
             )
         }
 
-        // Descripción
         Text(
-            text = roomDescription,
-            style = MaterialTheme.typography.bodyMedium,
-            color = Color.Gray
+            text = buildAnnotatedString {
+                withStyle(style = SpanStyle(color = Color.Magenta)) {
+                    append("Nombre de la habitación: ")
+                }
+                withStyle(style = SpanStyle(color = Color.Black)) {
+                    append("$roomName")
+                }
+            },
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            style = MaterialTheme.typography.bodyMedium
         )
 
-        // Precio de la habitación
+        Spacer(modifier = Modifier.height(16.dp))
+
+// Descripción
         Text(
-            text = "Precio: $roomPrice / noche",
+            text = buildAnnotatedString {
+                withStyle(style = SpanStyle(color = Color.Magenta)) {
+                    append("Descripción: ")
+                }
+                withStyle(style = SpanStyle(color = Color.Black)) {
+                    append("$roomDescription")
+                }
+            },
             style = MaterialTheme.typography.bodyMedium,
-            color = Color.Black
+            fontWeight = FontWeight.Bold,
+            fontSize = 20.sp
         )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+// Precio de la habitación
+        Text(
+            text = buildAnnotatedString {
+                withStyle(style = SpanStyle(color = Color.Magenta)) {
+                    append("Precio: ")
+                }
+                withStyle(style = SpanStyle(color = Color.Black)) {
+                    append("$roomPrice €/noche")
+                }
+            },
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.Bold,
+            fontSize = 20.sp
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+// Opciones extras
+        Text(
+            text = buildAnnotatedString {
+                withStyle(style = SpanStyle(color = Color.Magenta)) {
+                    append("Opciones extras: ")
+                }
+                withStyle(style = SpanStyle(color = Color.Black)) {
+                    append(roomOption)
+                }
+            },
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.Bold,
+            fontSize = 20.sp
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
 
         // Botón de reserva
         Button(
@@ -118,7 +169,10 @@ fun RoomDetailsFragment(
                 navController.navigate("main_screen") // Regresar a la pantalla principal
             }
         ) {
-            Text("Reservar Ahora")
+            Text(
+                text = "Reservar ahora",
+
+            )
         }
     }
 }

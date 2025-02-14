@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.Modifier
 import androidx.compose.material3.*
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -28,13 +29,14 @@ fun Notification(
     onDismiss: () -> Unit,
 ) {
     val notificaciones = listOf(
+        "Gracias por confiar en nosotros y usar nuestros servicios",
         "Oferta limitada: Algunas habitaciones cuentan con oferta",
         "Actualización disponible en los próximos días",
         "Verifica tu correo electrónico"
     )
 
     // Estado para el color de fondo cuando el ratón pasa por encima
-    var hoveredIndex by remember { mutableStateOf(-1) }
+    var hoveredIndex by remember { mutableIntStateOf(-1) }
 
 
     if (isVisible) {

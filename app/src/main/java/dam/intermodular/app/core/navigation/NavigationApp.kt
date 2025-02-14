@@ -36,8 +36,6 @@ fun NavigationApp(){
 
     NavHost(navController=navController, startDestination = Login)
     {
-
-
         composable<Login> {
             LoginScreen(
                 navigationTo = navController,
@@ -54,11 +52,12 @@ fun NavigationApp(){
             FavoritesScreen(navController, habitacionesViewModel)
         }
         composable(
-            "room_details_screen/{roomName}/{roomDescription}/{roomPrice}/{roomImage}/{previousScreen}",
+            "room_details_screen/{roomName}/{roomDescription}/{roomPrice}/{roomOption}/{roomImage}/{previousScreen}",
             arguments = listOf(
                 navArgument("roomName") { type = NavType.StringType },
                 navArgument("roomDescription") { type = NavType.StringType },
                 navArgument("roomPrice") { type = NavType.StringType },
+                navArgument("roomOption") { type = NavType.StringType },
                 navArgument("roomImage") { type = NavType.StringType },
                 navArgument("previousScreen") { type = NavType.StringType }
             )
@@ -66,6 +65,7 @@ fun NavigationApp(){
             val roomName = backStackEntry.arguments?.getString("roomName") ?: ""
             val roomDescription = backStackEntry.arguments?.getString("roomDescription") ?: ""
             val roomPrice = backStackEntry.arguments?.getString("roomPrice") ?: ""
+            val roomOption = backStackEntry.arguments?.getString("roomOption") ?: ""
             val roomImage = backStackEntry.arguments?.getString("roomImage") ?: ""
             val previousScreen = backStackEntry.arguments?.getString("previousScreen") ?: "main_screen"
 
@@ -74,6 +74,7 @@ fun NavigationApp(){
                 roomName = roomName,
                 roomDescription = roomDescription,
                 roomPrice = roomPrice,
+                roomOption = roomOption,
                 roomImage = roomImage,
                 previousScreen = previousScreen
             )

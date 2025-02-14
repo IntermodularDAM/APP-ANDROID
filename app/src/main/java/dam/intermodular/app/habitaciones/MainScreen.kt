@@ -45,9 +45,9 @@ fun base64ToImageBitmap(base64String: String): ImageBitmap? {
 @SuppressLint("DefaultLocale")
 @Composable
 fun MainScreen(navController: NavHostController, habitacionesViewModel: HabitacionesViewModel = viewModel()) {
-    val habitaciones by habitacionesViewModel.habitaciones.collectAsState()
+    //val habitaciones by habitacionesViewModel.habitaciones.collectAsState()
     val filteredHabitaciones by habitacionesViewModel.filteredHabitaciones.collectAsState()
-    val favoritos by habitacionesViewModel.favoritos.collectAsState()
+    //val favoritos by habitacionesViewModel.favoritos.collectAsState()
 
     val showFilterDialog = remember { mutableStateOf(false) }
     var showNotification by remember { mutableStateOf(false) }
@@ -145,11 +145,19 @@ fun MainScreen(navController: NavHostController, habitacionesViewModel: Habitaci
                             habitacion = habitacion,
                             habitacionesViewModel = habitacionesViewModel,
                             onClick = {
+
+                                val option = when {
+                                    habitacion.opciones.CamaExtra == true -> "CamaExtra"
+                                    habitacion.opciones.Cuna == true -> "Cuna"
+                                    else -> "Ninguna opción"
+                                }
+
                                 val encodedNombre = URLEncoder.encode(habitacion.nombre, StandardCharsets.UTF_8.toString())
                                 val encodedDescripcion = URLEncoder.encode(habitacion.descripcion, StandardCharsets.UTF_8.toString())
+                                val encodedOpciones = URLEncoder.encode(option, StandardCharsets.UTF_8.toString())
                                 val encodedImagenBase64 = URLEncoder.encode(habitacion.imagenBase64, StandardCharsets.UTF_8.toString())
                                 val formattedPrecio = String.format("%.2f", habitacion.precio_noche)
-                                navController.navigate("room_details_screen/$encodedNombre/$encodedDescripcion/$formattedPrecio/$encodedImagenBase64/main_screen")
+                                navController.navigate("room_details_screen/$encodedNombre/$encodedDescripcion/$formattedPrecio/$encodedOpciones/$encodedImagenBase64/main_screen")
                             }
                         )
                     }
