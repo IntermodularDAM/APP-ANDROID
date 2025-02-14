@@ -15,6 +15,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -163,16 +164,23 @@ fun RoomDetailsFragment(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Botón de reserva
         Button(
             onClick = {
                 navController.navigate("main_screen") // Regresar a la pantalla principal
-            }
+            },
+            modifier = Modifier
+                .fillMaxWidth() // Hace que el botón ocupe todo el ancho
+                .padding(16.dp) // Añade un poco de espacio alrededor del botón
+                .height(56.dp) // Cambia la altura del botón (puedes ajustar este valor)
+                .align(Alignment.CenterHorizontally) // Centra el botón horizontalmente
         ) {
             Text(
                 text = "Reservar ahora",
-
+                fontSize = 20.sp, // Cambia el tamaño de la fuente (ajusta a tu preferencia)
+                modifier = Modifier.fillMaxWidth(), // Asegura que el texto ocupe todo el ancho disponible
+                textAlign = TextAlign.Center // Centra el texto dentro del botón
             )
         }
+
     }
 }

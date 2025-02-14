@@ -116,7 +116,7 @@ fun MainScreen(navController: NavHostController, habitacionesViewModel: Habitaci
                 OutlinedTextField(
                     value = searchQuery.value,
                     onValueChange = { searchQuery.value = it },
-                    placeholder = { Text(text = "Search Room By Name") },
+                    placeholder = { Text(text = "Buscar habitación por nombre") },
                     singleLine = true,
                     modifier = Modifier
                         .weight(1f)
@@ -138,7 +138,7 @@ fun MainScreen(navController: NavHostController, habitacionesViewModel: Habitaci
                     textAlign = TextAlign.Center
                 )
             } else {
-                Text(text = "Recommended Rooms", style = MaterialTheme.typography.titleLarge)
+                Text(text = "Habitaciones recomendadas", style = MaterialTheme.typography.titleLarge)
                 LazyVerticalGrid(columns = GridCells.Fixed(2), modifier = Modifier.weight(1f)) {
                     items(filteredHabitaciones) { habitacion ->
                         RoomCard(
