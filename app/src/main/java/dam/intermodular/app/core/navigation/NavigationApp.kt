@@ -90,12 +90,14 @@ fun NavigationApp(){
             FavoritesScreen(navController, habitacionesViewModel)
         }
         composable(
-            "room_details_screen/{roomName}/{roomDescription}/{roomPrice}/{roomImage}",
+            "room_details_screen/{roomName}/{roomDescription}/{roomPrice}/{roomOption}/{roomImage}/{previousScreen}",
             arguments = listOf(
                 navArgument("roomName") { type = NavType.StringType },
                 navArgument("roomDescription") { type = NavType.StringType },
                 navArgument("roomPrice") { type = NavType.StringType },
-                navArgument("roomImage") { type = NavType.StringType }
+                navArgument("roomOption") { type = NavType.StringType },
+                navArgument("roomImage") { type = NavType.StringType },
+                navArgument("previousScreen") { type = NavType.StringType }
             )
         ) { backStackEntry ->
             val roomName = backStackEntry.arguments?.getString("roomName") ?: ""
