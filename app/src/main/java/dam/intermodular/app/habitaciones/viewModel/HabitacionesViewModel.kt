@@ -38,8 +38,10 @@ class HabitacionesViewModel @Inject constructor(
                 val response = apiService.getHabitaciones()
                 if (response.isSuccessful) {
                     response.body()?.let { habitaciones ->
-                        _habitaciones.value = habitaciones
-                        _filteredHabitaciones.value = habitaciones
+                        // Filtramos las habitaciones cuyo estado es true
+                        val habitacionesFiltradas = habitaciones.filter { it.estado }
+                        _habitaciones.value = habitacionesFiltradas
+                        _filteredHabitaciones.value = habitacionesFiltradas
                         loadFavoritos() // Solo ejecuta si hay datos
                     } ?: run {
                         Log.e("API_ERROR", "Respuesta vacía de la API")
@@ -149,8 +151,4 @@ class HabitacionesViewModel @Inject constructor(
             filtered
         }
     }
-
-
-
-
 }
