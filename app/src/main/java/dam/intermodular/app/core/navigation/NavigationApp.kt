@@ -22,6 +22,7 @@ import dam.intermodular.app.login.presentation.views.LoginScreen
 import dam.intermodular.app.reservas.model.Reservas
 import dam.intermodular.app.reservas.view.InfoReservaScreen
 import dam.intermodular.app.reservas.view.ModificarReservaScreen
+import dam.intermodular.app.reservas.view.ReservarHabitacionScreen
 import dam.intermodular.app.reservas.view.ReservasScreen
 
 
@@ -74,33 +75,54 @@ fun NavigationApp(){
         }
 
         composable(
-            "room_details_screen/{roomName}/{roomDescription}/{roomPrice}/{roomOption}/{roomImage}/{previousScreen}",
+            "reservar_habitacion/{roomId}/{roomName}/{roomPrice}/{maxHuespedes}/{usuarioId}",
             arguments = listOf(
+                navArgument("roomId") { type = NavType.StringType },
                 navArgument("roomName") { type = NavType.StringType },
-                navArgument("roomDescription") { type = NavType.StringType },
                 navArgument("roomPrice") { type = NavType.StringType },
-                navArgument("roomOption") { type = NavType.StringType },
-                navArgument("roomImage") { type = NavType.StringType },
-                navArgument("previousScreen") { type = NavType.StringType }
+                navArgument("maxHuespedes") { type = NavType.IntType },
+                navArgument("usuarioId") { type = NavType.StringType }
             )
         ) { backStackEntry ->
+            val roomId = backStackEntry.arguments?.getString("roomId") ?: ""
+            val roomName = backStackEntry.arguments?.getString("roomName") ?: ""
+            val roomPrice = backStackEntry.arguments?.getString("roomPrice") ?: ""
+            val maxHuespedes = backStackEntry.arguments?.getInt("maxHuespedes") ?: 1
+            val usuarioId = backStackEntry.arguments?.getString("usuarioId") ?: ""
+
+            ReservarHabitacionScreen(
+                navController = navController,
+                habitacionId = roomId,
+                habitacionNombre = roomName,
+                precioNoche = roomPrice,
+                maxHuespedes = maxHuespedes,
+                usuarioId = usuarioId
+            )
+        }
+
+        composable(
+            "room_details_screen/{roomId}/{roomName}/{roomDescription}/{roomPrice}/{maxHuespedes}/{roomOption}/{roomImage}/{previousScreen}"
+        ) { backStackEntry ->
+            val roomId = backStackEntry.arguments?.getString("roomId") ?: ""
             val roomName = backStackEntry.arguments?.getString("roomName") ?: ""
             val roomDescription = backStackEntry.arguments?.getString("roomDescription") ?: ""
             val roomPrice = backStackEntry.arguments?.getString("roomPrice") ?: ""
+            val maxHuespedes = backStackEntry.arguments?.getString("maxHuespedes") ?: ""
             val roomOption = backStackEntry.arguments?.getString("roomOption") ?: ""
             val roomImage = backStackEntry.arguments?.getString("roomImage") ?: ""
-            val previousScreen = backStackEntry.arguments?.getString("previousScreen") ?: "main_screen"
+            val previousScreen = backStackEntry.arguments?.getString("previousScreen") ?: ""
 
             RoomDetailsFragment(
                 navController = navController,
+                roomId = roomId,
                 roomName = roomName,
                 roomDescription = roomDescription,
                 roomPrice = roomPrice,
+                maxHuespedes = maxHuespedes,
                 roomOption = roomOption,
                 roomImage = roomImage,
                 previousScreen = previousScreen
             )
         }
-
     }
 }

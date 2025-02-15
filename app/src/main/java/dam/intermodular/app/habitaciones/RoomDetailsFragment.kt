@@ -26,9 +26,11 @@ import dam.intermodular.app.R
 @Composable
 fun RoomDetailsFragment(
     navController: NavHostController,
+    roomId: String,
     roomName: String,
     roomDescription: String,
     roomPrice: String,
+    maxHuespedes: String,
     roomOption: String,
     roomImage: String,
     previousScreen: String
@@ -166,21 +168,21 @@ fun RoomDetailsFragment(
 
         Button(
             onClick = {
-                navController.navigate("main_screen") // Regresar a la pantalla principal
+                val usuarioId = "A-002"
+                navController.navigate("reservar_habitacion/$roomId/$roomName/$roomPrice/$maxHuespedes/$usuarioId")
             },
             modifier = Modifier
-                .fillMaxWidth() // Hace que el botón ocupe todo el ancho
-                .padding(16.dp) // Añade un poco de espacio alrededor del botón
-                .height(56.dp) // Cambia la altura del botón (puedes ajustar este valor)
-                .align(Alignment.CenterHorizontally) // Centra el botón horizontalmente
+                .fillMaxWidth()
+                .padding(16.dp)
+                .height(56.dp)
+                .align(Alignment.CenterHorizontally)
         ) {
             Text(
                 text = "Reservar ahora",
-                fontSize = 20.sp, // Cambia el tamaño de la fuente (ajusta a tu preferencia)
-                modifier = Modifier.fillMaxWidth(), // Asegura que el texto ocupe todo el ancho disponible
-                textAlign = TextAlign.Center // Centra el texto dentro del botón
+                fontSize = 20.sp,
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center
             )
         }
-
     }
 }

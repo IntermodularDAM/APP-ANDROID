@@ -156,8 +156,11 @@ fun MainScreen(navController: NavHostController, habitacionesViewModel: Habitaci
                                 val encodedDescripcion = URLEncoder.encode(habitacion.descripcion, StandardCharsets.UTF_8.toString())
                                 val encodedOpciones = URLEncoder.encode(option, StandardCharsets.UTF_8.toString())
                                 val encodedImagenBase64 = URLEncoder.encode(habitacion.imagenBase64, StandardCharsets.UTF_8.toString())
-                                val formattedPrecio = String.format("%.2f", habitacion.precio_noche)
-                                navController.navigate("room_details_screen/$encodedNombre/$encodedDescripcion/$formattedPrecio/$encodedOpciones/$encodedImagenBase64/main_screen")
+                                val formattedPrecio = String.format("%.2f", habitacion.precio_noche ?: 0.0)
+                                val numMax = habitacion.capacidad.toString()
+                                val roomId = habitacion._id.toString()
+
+                                navController.navigate("room_details_screen/$roomId/$encodedNombre/$encodedDescripcion/$formattedPrecio/$numMax/$encodedOpciones/$encodedImagenBase64/main_screen")
                             }
                         )
                     }

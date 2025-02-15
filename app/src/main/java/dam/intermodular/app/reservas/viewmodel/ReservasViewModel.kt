@@ -11,6 +11,7 @@ import androidx.lifecycle.LiveData
 import dam.intermodular.app.habitaciones.Habitacion
 import dam.intermodular.app.reservas.model.Reservas
 import dam.intermodular.app.reservas.api.RetrofitClient
+import dam.intermodular.app.reservas.model.NuevaReserva
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -61,4 +62,27 @@ class ReservasViewModel : ViewModel() {
             }
         }
     }
+
+    fun createReserva(
+        idUsu: String = "U-002",
+        idHab: String,
+        fechaEntrada: String,
+        fechaSalida: String,
+        estado: String,
+        onSuccess: () -> Unit,
+        onError: (String) -> Unit
+    ) {
+        viewModelScope.launch {
+            try {
+                val nuevaReserva = NuevaReserva(idUsu, idHab, fechaEntrada, fechaSalida, estado)
+                val response = RetrofitClient.reservaApiService.createReserva(nuevaReserva)
+                Log.d("API_RESPONSE", "Reserva creada: $response")
+                onSuccess()
+            } catch (e: Exception) {
+                Log.e("API_ERROR", "Error al crear reserva: ${e.message}", e)
+                onError(e.message ?: "Error desconocido")
+            }
+        }
+    }
+
 }

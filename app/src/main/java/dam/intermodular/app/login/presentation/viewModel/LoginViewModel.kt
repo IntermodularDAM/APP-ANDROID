@@ -21,6 +21,13 @@ class LoginViewModel @Inject constructor(
     private val dataStoreManager: DataStoreManager
 ): ViewModel() {
 
+    private val _userId = MutableStateFlow<String?>(null)
+    val userId: StateFlow<String?> = _userId
+
+    fun setUserId(id: String) {
+        _userId.value = id
+    }
+
     private val _email = MutableStateFlow("")
     val email: StateFlow<String> = _email
 
