@@ -4,20 +4,16 @@ import androidx.compose.runtime.Composable
 
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import dam.intermodular.app.habitaciones.FavoritesScreen
-import dam.intermodular.app.habitaciones.HabitacionesViewModel
-import dam.intermodular.app.habitaciones.MainScreen
-import dam.intermodular.app.habitaciones.Notification
-import dam.intermodular.app.habitaciones.RoomDetailsFragment
+import dam.intermodular.app.habitaciones.view.FavoritesScreen
+import dam.intermodular.app.habitaciones.viewModel.HabitacionesViewModel
+import dam.intermodular.app.habitaciones.view.MainScreen
+import dam.intermodular.app.habitaciones.view.RoomDetailsFragment
 
 import dam.intermodular.app.home.presentation.views.HomeScreen
 import dam.intermodular.app.login.presentation.viewModel.LoginViewModel

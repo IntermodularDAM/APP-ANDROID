@@ -1,4 +1,4 @@
-package dam.intermodular.app.habitaciones
+package dam.intermodular.app.habitaciones.view
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*

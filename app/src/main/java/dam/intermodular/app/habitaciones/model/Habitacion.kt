@@ -1,4 +1,4 @@
-package dam.intermodular.app.habitaciones
+package dam.intermodular.app.habitaciones.model
 
 data class Habitacion(
     val _id: String,

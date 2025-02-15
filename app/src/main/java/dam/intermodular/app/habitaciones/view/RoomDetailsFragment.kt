@@ -1,10 +1,10 @@
-package dam.intermodular.app.habitaciones
+package dam.intermodular.app.habitaciones.view
 
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -59,14 +59,14 @@ fun RoomDetailsFragment(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(end = 16.dp),
-                    imageVector = Icons.Filled.ArrowBack,
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = "Volver"
                 )
             }
 
             Text(
                 text = "Detalles de la Habitación",
-                fontSize = 28.sp,
+                fontSize = 25.sp,
                 color = Color.Magenta,
                 style = MaterialTheme.typography.bodyMedium.copy(
                     fontWeight = FontWeight.Bold
@@ -81,7 +81,7 @@ fun RoomDetailsFragment(
                 contentDescription = "Imagen de la habitación",
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(400.dp)
+                    .height(375.dp)
                     .padding(bottom = 8.dp),
                 contentScale = ContentScale.Crop
             )
@@ -91,7 +91,7 @@ fun RoomDetailsFragment(
                 contentDescription = "Imagen por defecto de la habitación",
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(200.dp)
+                    .height(375.dp)
                     .padding(bottom = 8.dp),
                 contentScale = ContentScale.Crop
             )
@@ -106,7 +106,7 @@ fun RoomDetailsFragment(
                     append(roomName)
                 }
             },
-            fontSize = 20.sp,
+            fontSize = 17.sp,
             fontWeight = FontWeight.Bold,
             style = MaterialTheme.typography.bodyMedium
         )
@@ -125,7 +125,7 @@ fun RoomDetailsFragment(
             },
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Bold,
-            fontSize = 20.sp
+            fontSize = 17.sp
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -142,7 +142,7 @@ fun RoomDetailsFragment(
             },
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Bold,
-            fontSize = 20.sp
+            fontSize = 17.sp
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -159,25 +159,25 @@ fun RoomDetailsFragment(
             },
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Bold,
-            fontSize = 20.sp
+            fontSize = 17.sp
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
         Button(
             onClick = {
                 navController.navigate("main_screen") // Regresar a la pantalla principal
             },
             modifier = Modifier
-                .fillMaxWidth() // Hace que el botón ocupe todo el ancho
+                .fillMaxWidth() // Hace que el botón ocupe el ancho
                 .padding(16.dp) // Añade un poco de espacio alrededor del botón
-                .height(56.dp) // Cambia la altura del botón (puedes ajustar este valor)
+                .height(50.dp) // Cambia la altura del botón (puedes ajustar este valor)
                 .align(Alignment.CenterHorizontally) // Centra el botón horizontalmente
         ) {
             Text(
                 text = "Reservar ahora",
-                fontSize = 20.sp, // Cambia el tamaño de la fuente (ajusta a tu preferencia)
-                modifier = Modifier.fillMaxWidth(), // Asegura que el texto ocupe todo el ancho disponible
+                fontSize = 18.sp, // Cambia el tamaño de la fuente (ajusta a tu preferencia)
+                modifier = Modifier.fillMaxWidth(), // Asegura que el texto ocupe el ancho disponible
                 textAlign = TextAlign.Center // Centra el texto dentro del botón
             )
         }
