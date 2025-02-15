@@ -12,10 +12,10 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.toRoute
 import dam.intermodular.app.core.navigation.type.createNavType
-import dam.intermodular.app.habitaciones.FavoritesScreen
-import dam.intermodular.app.habitaciones.HabitacionesViewModel
-import dam.intermodular.app.habitaciones.MainScreen
-import dam.intermodular.app.habitaciones.RoomDetailsFragment
+import dam.intermodular.app.habitaciones.view.FavoritesScreen
+import dam.intermodular.app.habitaciones.viewModel.HabitacionesViewModel
+import dam.intermodular.app.habitaciones.view.MainScreen
+import dam.intermodular.app.habitaciones.view.RoomDetailsFragment
 
 import dam.intermodular.app.home.presentation.views.HomeScreen
 import dam.intermodular.app.login.presentation.viewModel.LoginViewModel
@@ -101,14 +101,18 @@ fun NavigationApp(){
             val roomName = backStackEntry.arguments?.getString("roomName") ?: ""
             val roomDescription = backStackEntry.arguments?.getString("roomDescription") ?: ""
             val roomPrice = backStackEntry.arguments?.getString("roomPrice") ?: ""
+            val roomOption = backStackEntry.arguments?.getString("roomOption") ?: ""
             val roomImage = backStackEntry.arguments?.getString("roomImage") ?: ""
+            val previousScreen = backStackEntry.arguments?.getString("previousScreen") ?: "main_screen"
 
             RoomDetailsFragment(
                 navController = navController,
                 roomName = roomName,
                 roomDescription = roomDescription,
                 roomPrice = roomPrice,
-                roomImage = roomImage
+                roomOption = roomOption,
+                roomImage = roomImage,
+                previousScreen = previousScreen
             )
         }
 

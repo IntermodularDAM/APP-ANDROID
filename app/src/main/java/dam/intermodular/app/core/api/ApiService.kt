@@ -1,6 +1,6 @@
 package dam.intermodular.app.core.api
 
-import dam.intermodular.app.habitaciones.Habitacion
+import dam.intermodular.app.habitaciones.model.Habitacion
 import dam.intermodular.app.login.data.LoginResponse
 import dam.intermodular.app.login.presentation.model.LogInModel
 import dam.intermodular.app.registro.data.RegisterResponse
