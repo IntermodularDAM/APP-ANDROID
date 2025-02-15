@@ -192,8 +192,8 @@ fun MainScreen(navController: NavHostController, habitacionesViewModel: Habitaci
             IconButton(onClick = { navController.navigate("home_screen") }) {
                 Icon(Icons.Filled.Home, contentDescription = "Home")
             }
-            IconButton(onClick = { navController.navigate("main_screen") }) {
-                Icon(Icons.Filled.Search, contentDescription = "Search")
+            IconButton(onClick = { navController.navigate("reservas_screen") }) {
+                Icon(Icons.Filled.Search, contentDescription = "Historial")
             }
             IconButton(onClick = { navController.navigate("favorites_screen") }) {
                 Icon(Icons.Filled.Favorite, contentDescription = "Favorite")

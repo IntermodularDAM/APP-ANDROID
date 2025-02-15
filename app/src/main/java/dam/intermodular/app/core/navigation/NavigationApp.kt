@@ -4,24 +4,25 @@ import androidx.compose.runtime.Composable
 
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.google.gson.Gson
 import dam.intermodular.app.habitaciones.FavoritesScreen
 import dam.intermodular.app.habitaciones.HabitacionesViewModel
 import dam.intermodular.app.habitaciones.MainScreen
-import dam.intermodular.app.habitaciones.Notification
 import dam.intermodular.app.habitaciones.RoomDetailsFragment
 
 import dam.intermodular.app.home.presentation.views.HomeScreen
 import dam.intermodular.app.login.presentation.viewModel.LoginViewModel
 import dam.intermodular.app.login.presentation.views.LoginScreen
+import dam.intermodular.app.reservas.model.Reservas
+import dam.intermodular.app.reservas.view.InfoReservaScreen
+import dam.intermodular.app.reservas.view.ModificarReservaScreen
+import dam.intermodular.app.reservas.view.ReservasScreen
 
 
 @Composable
@@ -51,6 +52,27 @@ fun NavigationApp(){
         composable("favorites_screen") {
             FavoritesScreen(navController, habitacionesViewModel)
         }
+        composable("reservas_screen"){
+            ReservasScreen(navController)
+        }
+        composable(
+            "infoReserva/{reservaJson}",
+            arguments = listOf(navArgument("reservaJson") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val reservaJson = backStackEntry.arguments?.getString("reservaJson")
+            val reserva = Gson().fromJson(reservaJson, Reservas::class.java)
+            InfoReservaScreen(navController, reserva)
+        }
+
+        composable(
+            "modificarReserva/{reservaJson}",
+            arguments = listOf(navArgument("reservaJson") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val reservaJson = backStackEntry.arguments?.getString("reservaJson")
+            val reserva = Gson().fromJson(reservaJson, Reservas::class.java)
+            ModificarReservaScreen(navController, reserva)
+        }
+
         composable(
             "room_details_screen/{roomName}/{roomDescription}/{roomPrice}/{roomOption}/{roomImage}/{previousScreen}",
             arguments = listOf(
