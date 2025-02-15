@@ -86,6 +86,13 @@ dependencies {
     //TINK CRYPTOGRAPHY
     implementation (libs.tink.android)
 
+    //CARGA DE IMAGENES
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.coil.compose)
+
+    //MULTIPART SEND
+    implementation(libs.okhttp)
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

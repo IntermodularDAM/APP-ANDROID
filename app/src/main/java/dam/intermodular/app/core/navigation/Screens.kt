@@ -11,6 +11,9 @@ object Splash
 object Login
 
 @Serializable
+object Register
+
+@Serializable
 object MainScreen
 
 @Serializable
@@ -28,4 +31,25 @@ data class SettingsInfo(
     val name: String,
     val id: Int,
     val darkMode:Boolean
+) : Parcelable
+
+@Serializable
+data class VerificationCode(val verificationData: VerificationData)
+
+@Parcelize
+@Serializable
+data class VerificationData(
+    val email: String,
+    val emailApp: String,
+    val idUser: String
+) : Parcelable
+
+@Serializable
+data class VerifyProfile(val verifyData: VerifyData)
+
+@Parcelize
+@Serializable
+data class VerifyData(
+    val emailApp: String,
+    val idUser: String,
 ) : Parcelable

@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import dam.intermodular.app.core.dataStore.DataStoreManager
 import dam.intermodular.app.core.navigation.Home
+import dam.intermodular.app.login.data.LoginResponse
 import dam.intermodular.app.login.domain.LogInRepository
 import dam.intermodular.app.login.presentation.model.LogInModel
 import kotlinx.coroutines.flow.first
@@ -84,16 +85,20 @@ class LoginViewModel @Inject constructor(
                     dataStoreManager.guardarTokens(
                         loginResponse.data.token,
                         loginResponse.data.appToken,
-                        loginResponse.data.user.rol
+                        loginResponse.data.user.rol,
+                        loginResponse.data.user._id
                     )
                     _token.value = loginResponse.data.token
                     _authState.value = "Login exitoso"
                     val tokenDataStore = dataStoreManager.getAccessToken().first()
                     val tokenAppToken = dataStoreManager.getApplicationToken().first()
                     val permisosRol = dataStoreManager.getRole().first()
+                    val idProfile = dataStoreManager.getIdProfile().first()
+
                     Log.d("ViewModel: Token","$tokenDataStore")
-                    Log.d("ViewModel: AppToken","$tokenAppToken")
+                    Log.d("ViewModel: AppToken","$tokenAppToken") 
                     Log.d("ViewModel: Rol","$permisosRol")
+                    Log.d("ViewModel: Id Perfil", "$idProfile ")
                     navigateTo.navigate("main_screen")
 
                 }else{

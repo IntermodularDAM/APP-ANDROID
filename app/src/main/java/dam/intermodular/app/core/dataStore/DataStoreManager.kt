@@ -21,7 +21,7 @@ class DataStoreManager @Inject constructor(
         preferences[FAVORITES_KEY] ?: emptySet()  // Si no existe, retornamos un set vacío
     }
 
-    suspend fun guardarTokens(accessToken: String, applicationToken: String, role: String){
+    suspend fun guardarTokens(accessToken: String, applicationToken: String, role: String, idProfile: String){
         withContext(Dispatchers.IO){
             val encryptedAccessToken = tinkManager.aead.encrypt(accessToken.toByteArray(),null)
             val encryptedApplicationToken = tinkManager.aead.encrypt(applicationToken.toByteArray(),null)
@@ -33,6 +33,8 @@ class DataStoreManager @Inject constructor(
                 preference[ACCESS_TOKEN_KEY] = encryptAccessString
                 preference[APPLICATION_TOKEN_KEY] = encryptApplicationString
                 preference[ACCESS_ROLE_KEY] = role
+                preference[ID_PROFILE_KEY] = idProfile
+
 
             }
         }
@@ -64,6 +66,11 @@ class DataStoreManager @Inject constructor(
         }
     }//val role = dataStoreManager.getRole().first()  Para obtener el valor una sola vez
 
+    fun getIdProfile(): Flow<String?> {
+        return context.dataStore.data.map { references ->
+            references[ID_PROFILE_KEY]
+        }
+    }
     suspend fun deleteStore(){
         withContext(Dispatchers.IO){
             context.dataStore.edit { preferences ->

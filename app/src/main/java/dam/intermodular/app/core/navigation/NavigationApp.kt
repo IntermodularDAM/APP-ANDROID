@@ -10,6 +10,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.navigation.toRoute
+import dam.intermodular.app.core.navigation.type.createNavType
 import dam.intermodular.app.habitaciones.FavoritesScreen
 import dam.intermodular.app.habitaciones.HabitacionesViewModel
 import dam.intermodular.app.habitaciones.MainScreen
@@ -18,12 +20,22 @@ import dam.intermodular.app.habitaciones.RoomDetailsFragment
 import dam.intermodular.app.home.presentation.views.HomeScreen
 import dam.intermodular.app.login.presentation.viewModel.LoginViewModel
 import dam.intermodular.app.login.presentation.views.LoginScreen
+import dam.intermodular.app.registro.presentation.view.RegisterScreen
+import dam.intermodular.app.registro.presentation.viewModel.RegisterViewModel
+import dam.intermodular.app.verificationCode.presentation.view.VerificationCodeScreen
+import dam.intermodular.app.verificationCode.presentation.viewModel.VerificationCodeViewModel
+import dam.intermodular.app.verifyProfile.presentation.view.VerifyProfileScreen
+import dam.intermodular.app.verifyProfile.presentation.viewModel.VerifyProfileViewModel
+import kotlin.reflect.typeOf
 
 
 @Composable
 fun NavigationApp(){
     val navController = rememberNavController()
     val viewModelLogin : LoginViewModel = viewModel()
+    val viewModelRegister: RegisterViewModel = viewModel()
+    val viewModelVerificationCode: VerificationCodeViewModel = viewModel()
+    val viewModelVerifyProfile: VerifyProfileViewModel = viewModel()
     val habitacionesViewModel: HabitacionesViewModel = viewModel()
     val authState by viewModelLogin.authState.collectAsState()
     val token by viewModelLogin.authState.collectAsState()
@@ -32,14 +44,42 @@ fun NavigationApp(){
 
     NavHost(navController=navController, startDestination = Login)
     {
-
-
         composable<Login> {
             LoginScreen(
                 navigationTo = navController,
                 viewModel = viewModelLogin
             )
         }
+        composable<Register> {
+            RegisterScreen(
+                navigateTo = navController,
+                viewModel = viewModelRegister
+            )
+        }
+        composable<VerificationCode>(
+            typeMap = mapOf(typeOf<VerificationData>() to createNavType<VerificationData>())
+        ){ navBackStackEntry ->
+            val verificationCode = navBackStackEntry.toRoute<VerificationCode>()
+            VerificationCodeScreen(
+                verificationData = verificationCode.verificationData,
+                viewModel = viewModelVerificationCode,
+                navigateTo = navController
+            )
+        }
+        composable<VerifyProfile>(
+            typeMap = mapOf(typeOf<VerifyData>() to createNavType<VerifyData>())
+        ){ navBackStackEntry ->
+            val verifyProfile = navBackStackEntry.toRoute<VerifyProfile>()
+            VerifyProfileScreen(
+                verifyData = verifyProfile.verifyData,
+                viewModel = viewModelVerifyProfile,
+                navigateTo = navController
+            )
+
+        }
+
+
+
         composable<Home>{
             HomeScreen{ name -> navController.navigate(Detail(name = name))}
         }
