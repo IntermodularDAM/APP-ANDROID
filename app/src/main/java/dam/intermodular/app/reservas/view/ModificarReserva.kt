@@ -3,7 +3,6 @@ package dam.intermodular.app.reservas.view
 import android.app.DatePickerDialog
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.CalendarMonth
@@ -12,7 +11,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -27,7 +25,11 @@ import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ModificarReservaScreen(navController: NavHostController, reserva: Reservas, reservaViewModel: ReservasViewModel = viewModel()) {
+fun ModificarReservaScreen(
+    navController: NavHostController,
+    reserva: Reservas,
+    reservaViewModel: ReservasViewModel = viewModel()
+) {
     val context = LocalContext.current
     var fechaEntrada by remember { mutableStateOf(reserva.fechaEntrada) }
     var fechaSalida by remember { mutableStateOf(reserva.fechaSalida) }
@@ -66,116 +68,136 @@ fun ModificarReservaScreen(navController: NavHostController, reserva: Reservas, 
         calendarSalida.get(Calendar.DAY_OF_MONTH)
     )
 
-    Column(modifier = Modifier.padding(16.dp)) {
-        Text(text = "Modificar Reserva", fontSize = 22.sp, fontWeight = FontWeight.Bold, color = Purple40)
-        Text(text = "ID: ${reserva.id}")
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        // Botón para seleccionar Fecha de Entrada
-        OutlinedTextField(
-            value = fechaEntrada,
-            onValueChange = { },
-            label = { Text("Fecha de Entrada (yyyy-MM-dd)") },
-            readOnly = true,
-            trailingIcon = {
-                IconButton(onClick = { datePickerEntrada.show() }) {
-                    Icon(Icons.Filled.CalendarMonth, contentDescription = "Seleccionar Fecha")
-                }
-            },
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        // Botón para seleccionar Fecha de Salida
-        OutlinedTextField(
-            value = fechaSalida,
-            onValueChange = { },
-            label = { Text("Fecha de Salida (yyyy-MM-dd)") },
-            readOnly = true,
-            trailingIcon = {
-                IconButton(onClick = { datePickerSalida.show() }) {
-                    Icon(Icons.Filled.CalendarMonth, contentDescription = "Seleccionar Fecha")
-                }
-            },
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        // Menú desplegable para Estado de la Reserva
-        ExposedDropdownMenuBox(
-            expanded = expanded,
-            onExpandedChange = { expanded = it }
-        ) {
-            OutlinedTextField(
-                value = estado,
-                onValueChange = { },
-                label = { Text("Estado") },
-                readOnly = true,
-                modifier = Modifier.fillMaxWidth().menuAnchor(),
-                trailingIcon = {
-                    IconButton(onClick = { expanded = true }) {
-                        Icon(Icons.Filled.ArrowDropDown, contentDescription = "Desplegar menú")
-                    }
-                }
-            )
-
-            ExposedDropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false }
-            ) {
-                estados.forEach { opcion ->
-                    DropdownMenuItem(
-                        text = { Text(opcion) },
-                        onClick = {
-                            estado = opcion
-                            expanded = false
-                        }
-                    )
-                }
-            }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Button(
-                onClick = {
-                    isUpdating = true
-                    reservaViewModel.updateReserva(
-                        reserva.id,
-                        reserva.idUsu,
-                        reserva.idHab,
-                        fechaEntrada,
-                        fechaSalida,
-                        estado,
-                        onSuccess = {
-                            isUpdating = false
-                            Toast.makeText(context, "Reserva actualizada con éxito", Toast.LENGTH_SHORT).show()
-                            navController.popBackStack()
-                        },
-                        onError = {
-                            isUpdating = false
-                            Toast.makeText(context, "Error al actualizar la reserva", Toast.LENGTH_SHORT).show()
-                        }
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(
+                        text = "Modificar Reserva",
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
                     )
                 },
-                enabled = !isUpdating
+                colors = TopAppBarDefaults.topAppBarColors(Purple40)
+            )
+        },
+        containerColor = Color(0xFFF2F2F2) // Fondo gris claro
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Text(text = "ID: ${reserva.id}", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Purple40)
+
+            // Fecha de Entrada
+            OutlinedTextField(
+                value = fechaEntrada,
+                onValueChange = { },
+                label = { Text("Fecha de Entrada (yyyy-MM-dd)") },
+                readOnly = true,
+                trailingIcon = {
+                    IconButton(onClick = { datePickerEntrada.show() }) {
+                        Icon(Icons.Filled.CalendarMonth, contentDescription = "Seleccionar Fecha")
+                    }
+                },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            // Fecha de Salida
+            OutlinedTextField(
+                value = fechaSalida,
+                onValueChange = { },
+                label = { Text("Fecha de Salida (yyyy-MM-dd)") },
+                readOnly = true,
+                trailingIcon = {
+                    IconButton(onClick = { datePickerSalida.show() }) {
+                        Icon(Icons.Filled.CalendarMonth, contentDescription = "Seleccionar Fecha")
+                    }
+                },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            // Menú desplegable para Estado de la Reserva
+            ExposedDropdownMenuBox(
+                expanded = expanded,
+                onExpandedChange = { expanded = it }
             ) {
-                if (isUpdating) {
-                    CircularProgressIndicator(color = Color.White, modifier = Modifier.size(20.dp))
-                } else {
-                    Text("Guardar")
+                OutlinedTextField(
+                    value = estado,
+                    onValueChange = { },
+                    label = { Text("Estado") },
+                    readOnly = true,
+                    modifier = Modifier.fillMaxWidth().menuAnchor(),
+                    trailingIcon = {
+                        IconButton(onClick = { expanded = true }) {
+                            Icon(Icons.Filled.ArrowDropDown, contentDescription = "Desplegar menú")
+                        }
+                    }
+                )
+
+                ExposedDropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false }
+                ) {
+                    estados.forEach { opcion ->
+                        DropdownMenuItem(
+                            text = { Text(opcion) },
+                            onClick = {
+                                estado = opcion
+                                expanded = false
+                            }
+                        )
+                    }
                 }
             }
 
-            Button(onClick = { navController.popBackStack() }) {
-                Text("Cancelar")
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Button(
+                    onClick = {
+                        isUpdating = true
+                        reservaViewModel.updateReserva(
+                            reserva.id,
+                            reserva.idUsu,
+                            reserva.idHab,
+                            fechaEntrada,
+                            fechaSalida,
+                            estado,
+                            onSuccess = {
+                                isUpdating = false
+                                Toast.makeText(context, "Reserva actualizada con éxito", Toast.LENGTH_SHORT).show()
+                                navController.popBackStack()
+                            },
+                            onError = {
+                                isUpdating = false
+                                Toast.makeText(context, "Error al actualizar la reserva", Toast.LENGTH_SHORT).show()
+                            }
+                        )
+                    },
+                    enabled = !isUpdating,
+                    colors = ButtonDefaults.buttonColors(containerColor = Purple40)
+                ) {
+                    if (isUpdating) {
+                        CircularProgressIndicator(color = Color.White, modifier = Modifier.size(20.dp))
+                    } else {
+                        Text("Guardar", color = Color.White)
+                    }
+                }
+
+                Button(
+                    onClick = { navController.popBackStack() },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Gray)
+                ) {
+                    Text("Cancelar", color = Color.White)
+                }
             }
         }
     }

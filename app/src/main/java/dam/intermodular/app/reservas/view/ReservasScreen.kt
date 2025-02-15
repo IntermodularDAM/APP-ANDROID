@@ -1,6 +1,8 @@
 package dam.intermodular.app.reservas.view
 
 import android.util.Log
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -35,7 +37,14 @@ fun ReservasScreen(navController: NavHostController, reservaViewModel: ReservasV
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("Reservas Disponibles", fontSize = 22.sp, fontWeight = FontWeight.Bold) },
+                title = {
+                    Text(
+                        "Historial de Reservas",
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
+                },
                 colors = TopAppBarDefaults.topAppBarColors(Purple40)
             )
         },
@@ -47,7 +56,10 @@ fun ReservasScreen(navController: NavHostController, reservaViewModel: ReservasV
         containerColor = Color(0xFFD3D3D3)
     ) { paddingValues ->
         Column(
-            modifier = Modifier.fillMaxSize().padding(paddingValues).padding(16.dp)
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .padding(16.dp)
         ) {
             if (reservas.isEmpty()) {
                 Text(
@@ -80,16 +92,15 @@ fun ReservasScreen(navController: NavHostController, reservaViewModel: ReservasV
 @Composable
 fun ReservaItem(reserva: Reservas, onInfoClick: (String) -> Unit, onModifyClick: (String) -> Unit) {
     Card(
-        modifier = Modifier.fillMaxWidth().padding(vertical = 6.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 6.dp)
+            .border(5.dp, Color.DarkGray, RoundedCornerShape(10.dp)),
         shape = RoundedCornerShape(10.dp),
         colors = CardDefaults.cardColors(containerColor = Color(0xFFD1C4E9))
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(text = "Reserva ID: ${reserva.id}", fontWeight = FontWeight.Bold, fontSize = 18.sp, color = Purple40)
-            /*Text(text = "Usuario: ${reserva.idUsu}", fontSize = 16.sp, color = Color.DarkGray)
-            Text(text = "Habitación: ${reserva.idHab}", fontSize = 16.sp, color = Color.DarkGray)
-            Text(text = "Check-in: ${reserva.fechaEntrada}", fontSize = 16.sp, color = Color.DarkGray)
-            Text(text = "Check-out: ${reserva.fechaSalida}", fontSize = 16.sp, color = Color.DarkGray)*/
             Text(
                 text = "Estado: ${reserva.estado}",
                 fontWeight = FontWeight.SemiBold,
@@ -107,7 +118,11 @@ fun ReservaItem(reserva: Reservas, onInfoClick: (String) -> Unit, onModifyClick:
                     Text("Info", color = Color.White)
                 }
 
-                Button(onClick = { onModifyClick(reserva.id) }, colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray)) {
+                Button(
+                    onClick = { onModifyClick(reserva.id) },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray),
+                    border = BorderStroke(3.dp, Purple40)
+                ) {
                     Text("Modificar", color = Color.Black)
                 }
             }
