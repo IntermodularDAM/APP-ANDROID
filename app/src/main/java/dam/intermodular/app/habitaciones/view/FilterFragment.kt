@@ -22,7 +22,7 @@ fun FilterFragment(
     if (isVisible) {
         AlertDialog(
             onDismissRequest = onDismiss,
-            title = { Text(text = "Apply Filters") },
+            title = { Text(text = "Aplicar filtros") },
             text = {
                 Column(
                     modifier = Modifier
@@ -30,44 +30,44 @@ fun FilterFragment(
                         .padding(16.dp)
                 ) {
                     // Filtro de rango de precio
-                    Text("Price Range:")
+                    Text("Rango de precio:")
                     TextField(
                         value = priceRange,
                         onValueChange = { priceRange = it },
-                        label = { Text("Enter price range") },
+                        label = { Text("Escribe rango de precio") },
                         modifier = Modifier.fillMaxWidth()
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
 
                     // Filtro de capacidad
-                    Text("Capacity:")
+                    Text("Capacidad:")
                     TextField(
                         value = capacity,
                         onValueChange = { capacity = it },
-                        label = { Text("Enter capacity") },
+                        label = { Text("Escribe capacidad") },
                         modifier = Modifier.fillMaxWidth()
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
 
                     // Filtro de tipo de habitación
-                    Text("Room Type:")
+                    Text("Tipo de habitación:")
                     TextField(
                         value = roomType,
                         onValueChange = { roomType = it },
-                        label = { Text("Enter room type") },
+                        label = { Text("Escribe tipo de habitación") },
                         modifier = Modifier.fillMaxWidth()
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
 
                     // Filtro de opciones
-                    Text("Options:")
+                    Text("Opciones:")
                     TextField(
                         value = options,
                         onValueChange = { options = it },
-                        label = { Text("Enter options") },
+                        label = { Text("Escribe Opcion (Cama Extra / Cuna)") },
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
@@ -77,12 +77,12 @@ fun FilterFragment(
                     applyFilters(priceRange, capacity, roomType, options)
                     onDismiss() // Cerrar el dialogo
                 }) {
-                    Text("Apply Filters")
+                    Text("Aplicar")
                 }
             },
             dismissButton = {
                 Button(onClick = { onDismiss() }) {
-                    Text("Cancel")
+                    Text("Cancelar")
                 }
             }
         )
