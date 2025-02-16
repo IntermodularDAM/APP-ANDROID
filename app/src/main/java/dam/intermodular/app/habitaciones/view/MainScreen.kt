@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
@@ -46,189 +47,6 @@ fun base64ToImageBitmap(base64String: String): ImageBitmap? {
     }
 }
 
-@SuppressLint("DefaultLocale")
-@Composable
-fun MainScreen(navController: NavHostController, habitacionesViewModel: HabitacionesViewModel = viewModel()) {
-    //val habitaciones by habitacionesViewModel.habitaciones.collectAsState()
-    val filteredHabitaciones by habitacionesViewModel.filteredHabitaciones.collectAsState()
-    //val favoritos by habitacionesViewModel.favoritos.collectAsState()
-
-    val showFilterDialog = remember { mutableStateOf(false) }
-    var showNotification by remember { mutableStateOf(false) }
-    val searchQuery = remember { mutableStateOf("") }
-
-    val context = LocalContext.current
-
-    LaunchedEffect(searchQuery.value) {
-        habitacionesViewModel.filterByName(searchQuery.value)
-    }
-
-    LaunchedEffect(Unit) {
-        habitacionesViewModel.loadHabitaciones()
-    }
-
-    // Función que aplica los filtros
-    val applyFilters = { priceRange: String?, capacity: String?, roomType: String?, options: String? ->
-        habitacionesViewModel.applyFilters(priceRange, capacity, roomType, options)
-    }
-
-    Box(modifier = Modifier.fillMaxSize()) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(10.dp)
-                .padding(bottom = 72.dp)
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Box(
-                    modifier = Modifier.fillMaxWidth(), // Ocupa todo el espacio disponible
-                    contentAlignment = Alignment.Center // Centra el contenido del Box
-                ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally // Centra los textos dentro del Column
-                    ) {
-                        Text(text = "Location", style = MaterialTheme.typography.bodyLarge.copy(color = Color.Gray))
-                        Text(text = "Night Days", style = MaterialTheme.typography.titleLarge)
-                    }
-
-                    IconButton(
-                        onClick = { showNotification = true }, // Al hacer clic, se abre la notificación
-                        modifier = Modifier
-                            .padding(end = 5.dp, top = 15.dp)
-                            .align(Alignment.TopEnd) // Posiciona el icono en la esquina superior derecha
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Notifications,
-                            contentDescription = "Notificaciones"
-                        )
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(8.dp))
-                    .padding(horizontal = 8.dp, vertical = 4.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(Icons.Filled.Search, contentDescription = "Search")
-                OutlinedTextField(
-                    value = searchQuery.value,
-                    onValueChange = { searchQuery.value = it },
-                    placeholder = { Text(text = "Buscar habitación por nombre") },
-                    singleLine = true,
-                    modifier = Modifier
-                        .weight(1f)
-                        .background(Color.Transparent)
-                )
-                IconButton(onClick = { showFilterDialog.value = true }) {
-                    Icon(Icons.Filled.MoreVert, contentDescription = "Filter")
-                }
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            if (filteredHabitaciones.isEmpty()) {
-                Text(
-                    text = "No hay habitaciones disponibles",
-                    style = MaterialTheme.typography.titleLarge,
-                    color = Color.Red,
-                    modifier = Modifier.fillMaxWidth().padding(16.dp),
-                    textAlign = TextAlign.Center
-                )
-            } else {
-                Text(text = "Habitaciones recomendadas", style = MaterialTheme.typography.titleLarge)
-                LazyVerticalGrid(columns = GridCells.Fixed(2), modifier = Modifier.weight(1f)) {
-                    items(filteredHabitaciones) { habitacion ->
-                        RoomCard(
-                            habitacion = habitacion,
-                            habitacionesViewModel = habitacionesViewModel,
-                            onClick = {
-
-                                val option = when {
-                                    habitacion.opciones.CamaExtra == true -> "CamaExtra"
-                                    habitacion.opciones.Cuna == true -> "Cuna"
-                                    else -> "Ninguna opción"
-                                }
-
-                                val encodedNombre = URLEncoder.encode(habitacion.nombre, StandardCharsets.UTF_8.toString())
-                                val encodedDescripcion = URLEncoder.encode(habitacion.descripcion, StandardCharsets.UTF_8.toString())
-                                val encodedOpciones = URLEncoder.encode(option, StandardCharsets.UTF_8.toString())
-                                val encodedImagenBase64 = URLEncoder.encode(habitacion.imagenBase64, StandardCharsets.UTF_8.toString())
-                                val formattedPrecio = String.format("%.2f", habitacion.precio_noche ?: 0.0)
-                                val numMax = habitacion.capacidad.toString()
-                                val roomId = habitacion._id.toString()
-
-                                navController.navigate("room_details_screen/$roomId/$encodedNombre/$encodedDescripcion/$formattedPrecio/$numMax/$encodedOpciones/$encodedImagenBase64/main_screen")
-                            }
-                        )
-                    }
-                }
-            }
-        }
-
-        // Mostrar el cuadro de diálogo de filtro
-        FilterFragment(
-            isVisible = showFilterDialog.value,
-            onDismiss = { showFilterDialog.value = false },
-            applyFilters = { priceRange, capacity, roomType, options ->
-                applyFilters(priceRange, capacity, roomType, options)
-                showFilterDialog.value = false // Cerrar el diálogo después de aplicar los filtros
-            }
-        )
-
-        // Mostrar el cuadro de notificaciones (en este caso son notificaciones permanentes)
-        Notification(
-            isVisible = showNotification,
-            onDismiss = { showNotification = false }
-        )
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.BottomCenter)
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceAround,
-            verticalAlignment = Alignment.Bottom
-        ) {
-            IconButton(onClick = { navController.navigate("main_screen") } ) {
-                Icon(Icons.Filled.Home, contentDescription = "Home")
-            }
-<<<<<<< HEAD:app/src/main/java/dam/intermodular/app/habitaciones/MainScreen.kt
-            IconButton(onClick = { navController.navigate("reservas_screen") }) {
-                Icon(Icons.Filled.Search, contentDescription = "Historial")
-=======
-            IconButton(
-                onClick = {
-                    // Mostrar mensaje (Toast) cada vez que se pulse el botón
-                    Toast.makeText(
-                        context,
-                        "¡BIENVENIDOS A NIGHT DAYS!",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            ) {
-                Icon(Icons.Filled.Info, contentDescription = "Info")
->>>>>>> 0d22c97198aa666cb96a1d58b5bca9f90245c55b:app/src/main/java/dam/intermodular/app/habitaciones/view/MainScreen.kt
-            }
-            IconButton(onClick = { navController.navigate("favorites_screen") }) {
-                Icon(Icons.Filled.Favorite, contentDescription = "Favorite")
-            }
-            IconButton(onClick = { navController.navigate("profile_screen") }) {
-                Icon(Icons.Filled.Person, contentDescription = "Profile")
-            }
-        }
-    }
-}
-
-@SuppressLint("DefaultLocale")
 @Composable
 fun RoomCard(
     habitacion: Habitacion,
@@ -236,6 +54,10 @@ fun RoomCard(
     onClick: () -> Unit
 ) {
     val isFavorite by habitacionesViewModel.isFavorite(habitacion).collectAsState(initial = false)
+
+    val imageBitmap = remember(habitacion.imagenBase64) {
+        habitacion.imagenBase64?.let { base64ToImageBitmap(it) }
+    }
 
     Card(
         modifier = Modifier
@@ -245,27 +67,14 @@ fun RoomCard(
         shape = RoundedCornerShape(8.dp)
     ) {
         Column {
-            habitacion.imagenBase64.let { base64String ->
-                base64ToImageBitmap(base64String)?.let { imageBitmap ->
-                    Image(
-                        bitmap = imageBitmap,
-                        contentDescription = habitacion.nombre,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .fillMaxWidth()  // Asegura que ocupe todo el ancho
-                            .height(100.dp)
-                    )
-                }
-            } ?: run {
-                Image(
-                    painter = painterResource(id = R.drawable.room_image),
-                    contentDescription = habitacion.nombre,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .fillMaxWidth()  // Asegura que ocupe todo el ancho
-                        .height(100.dp)
-                )
-            }
+            Image(
+                bitmap = imageBitmap ?: ImageBitmap.imageResource(R.drawable.room_image),
+                contentDescription = habitacion.nombre,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(100.dp)
+            )
             Box(modifier = Modifier.fillMaxSize()) {
                 // Content before the heart icon
                 Column(
@@ -327,6 +136,209 @@ fun RoomCard(
                         tint = if (isFavorite) Color.Red else Color.Gray
                     )
                 }
+            }
+        }
+    }
+}
+
+@SuppressLint("DefaultLocale")
+@Composable
+fun MainScreen(navController: NavHostController, habitacionesViewModel: HabitacionesViewModel = viewModel()) {
+    //val habitaciones by habitacionesViewModel.habitaciones.collectAsState()
+    val filteredHabitaciones by habitacionesViewModel.filteredHabitaciones.collectAsState()
+    //val favoritos by habitacionesViewModel.favoritos.collectAsState()
+
+    val showFilterDialog = remember { mutableStateOf(false) }
+    var showNotification by remember { mutableStateOf(false) }
+    val searchQuery = remember { mutableStateOf("") }
+
+    val context = LocalContext.current
+
+    LaunchedEffect(searchQuery.value) {
+        habitacionesViewModel.filterByName(searchQuery.value)
+    }
+
+    LaunchedEffect(Unit) {
+        habitacionesViewModel.loadHabitaciones()
+    }
+
+    // Función que aplica los filtros
+    val applyFilters =
+        { priceRange: String?, capacity: String?, roomType: String?, options: String? ->
+            habitacionesViewModel.applyFilters(priceRange, capacity, roomType, options)
+        }
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(10.dp)
+                .padding(bottom = 72.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Box(
+                    modifier = Modifier.fillMaxWidth(), // Ocupa todo el espacio disponible
+                    contentAlignment = Alignment.Center // Centra el contenido del Box
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally // Centra los textos dentro del Column
+                    ) {
+                        Text(
+                            text = "Location",
+                            style = MaterialTheme.typography.bodyLarge.copy(color = Color.Gray)
+                        )
+                        Text(text = "Night Days", style = MaterialTheme.typography.titleLarge)
+                    }
+
+                    IconButton(
+                        onClick = {
+                            showNotification = true
+                        }, // Al hacer clic, se abre la notificación
+                        modifier = Modifier
+                            .padding(end = 5.dp, top = 15.dp)
+                            .align(Alignment.TopEnd) // Posiciona el icono en la esquina superior derecha
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Notifications,
+                            contentDescription = "Notificaciones"
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(8.dp))
+                    .padding(horizontal = 8.dp, vertical = 4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(Icons.Filled.Search, contentDescription = "Search")
+                OutlinedTextField(
+                    value = searchQuery.value,
+                    onValueChange = { searchQuery.value = it },
+                    placeholder = { Text(text = "Buscar habitación por nombre") },
+                    singleLine = true,
+                    modifier = Modifier
+                        .weight(1f)
+                        .background(Color.Transparent)
+                )
+                IconButton(onClick = { showFilterDialog.value = true }) {
+                    Icon(Icons.Filled.MoreVert, contentDescription = "Filter")
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            if (filteredHabitaciones.isEmpty()) {
+                Text(
+                    text = "No hay habitaciones disponibles",
+                    style = MaterialTheme.typography.titleLarge,
+                    color = Color.Red,
+                    modifier = Modifier.fillMaxWidth().padding(16.dp),
+                    textAlign = TextAlign.Center
+                )
+            } else {
+                Text(
+                    text = "Habitaciones recomendadas",
+                    style = MaterialTheme.typography.titleLarge
+                )
+                LazyVerticalGrid(columns = GridCells.Fixed(2), modifier = Modifier.weight(1f)) {
+                    items(filteredHabitaciones) { habitacion ->
+                        RoomCard(
+                            habitacion = habitacion,
+                            habitacionesViewModel = habitacionesViewModel,
+                            onClick = {
+                                try {
+                                    val option = when {
+                                        habitacion.opciones.CamaExtra == true -> "CamaExtra"
+                                        habitacion.opciones.Cuna == true -> "Cuna"
+                                        else -> "Ninguna opción"
+                                    }
+
+                                    // Evitar errores de codificación en caso de valores nulos
+                                    val encodedNombre = URLEncoder.encode(habitacion.nombre ?: "Sin nombre", StandardCharsets.UTF_8.toString())
+                                    val encodedDescripcion = URLEncoder.encode(habitacion.descripcion ?: "Sin descripción", StandardCharsets.UTF_8.toString())
+                                    val encodedOpciones = URLEncoder.encode(option, StandardCharsets.UTF_8.toString())
+
+                                    // Verificar que la imagen base64 no sea null
+                                    val encodedImagenBase64 = habitacion.imagenBase64?.let {
+                                        URLEncoder.encode(it, StandardCharsets.UTF_8.toString())
+                                    } ?: ""
+
+                                    val formattedPrecio = String.format("%.2f", habitacion.precio_noche ?: 0.0)
+                                    val numMax = habitacion.capacidad?.toString() ?: "0"
+                                    val roomId = habitacion._id ?: "0"
+
+                                    navController.navigate("room_details_screen/$roomId/$encodedNombre/$encodedDescripcion/$formattedPrecio/$numMax/$encodedOpciones/$encodedImagenBase64/main_screen")
+                                } catch (e: Exception) {
+                                    e.printStackTrace() // Para depuración
+                                    Toast.makeText(context, "Error al abrir los detalles de la habitación", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        )
+                    }
+                }
+            }
+        }
+
+        // Mostrar el cuadro de diálogo de filtro
+        FilterFragment(
+            isVisible = showFilterDialog.value,
+            onDismiss = { showFilterDialog.value = false },
+            applyFilters = { priceRange, capacity, roomType, options ->
+                applyFilters(priceRange, capacity, roomType, options)
+                showFilterDialog.value = false // Cerrar el diálogo después de aplicar los filtros
+            }
+        )
+
+        // Mostrar el cuadro de notificaciones (en este caso son notificaciones permanentes)
+        Notification(
+            isVisible = showNotification,
+            onDismiss = { showNotification = false }
+        )
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.BottomCenter)
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceAround,
+            verticalAlignment = Alignment.Bottom
+        ) {
+            IconButton(onClick = { navController.navigate("main_screen") }) {
+                Icon(Icons.Filled.Home, contentDescription = "Home")
+            }
+
+            IconButton(onClick = { navController.navigate("reservas_screen") }) {
+                Icon(Icons.Filled.Search, contentDescription = "Historial")
+            }
+
+            IconButton(
+                onClick = {
+                    // Mostrar mensaje (Toast) cada vez que se pulse el botón
+                    Toast.makeText(
+                        context,
+                        "¡BIENVENIDOS A NIGHT DAYS!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            ) {
+                Icon(Icons.Filled.Info, contentDescription = "Info")
+            }
+
+            IconButton(onClick = { navController.navigate("favorites_screen") }) {
+                Icon(Icons.Filled.Favorite, contentDescription = "Favorite")
+            }
+
+            IconButton(onClick = { navController.navigate("profile_screen") }) {
+                Icon(Icons.Filled.Person, contentDescription = "Profile")
             }
         }
     }

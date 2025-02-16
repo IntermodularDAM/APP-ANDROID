@@ -16,6 +16,7 @@ import dam.intermodular.app.habitaciones.viewModel.HabitacionesViewModel
 import dam.intermodular.app.habitaciones.view.MainScreen
 import dam.intermodular.app.habitaciones.view.RoomDetailsFragment
 import androidx.navigation.toRoute
+import dam.intermodular.app.core.dataStore.DataStoreManager
 import dam.intermodular.app.core.navigation.type.createNavType
 
 import dam.intermodular.app.home.presentation.views.HomeScreen
@@ -43,6 +44,7 @@ fun NavigationApp(){
     val viewModelVerificationCode: VerificationCodeViewModel = viewModel()
     val viewModelVerifyProfile: VerifyProfileViewModel = viewModel()
     val habitacionesViewModel: HabitacionesViewModel = viewModel()
+    val dataStoreManager: DataStoreManager
     val authState by viewModelLogin.authState.collectAsState()
     val token by viewModelLogin.authState.collectAsState()
     val isChekingToken by viewModelLogin.isCheckingToken.collectAsState()
@@ -83,8 +85,6 @@ fun NavigationApp(){
             )
 
         }
-
-
 
         composable<Home>{
             HomeScreen{ name -> navController.navigate(Detail(name = name))}

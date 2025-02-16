@@ -1,6 +1,7 @@
 package dam.intermodular.app.reservas.view
 
 import android.app.DatePickerDialog
+import android.provider.ContactsContract.Data
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -17,10 +18,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.datastore.core.DataStore
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import dam.intermodular.app.core.dataStore.DataStoreManager
 import dam.intermodular.app.reservas.model.NuevaReserva
 import dam.intermodular.app.reservas.viewmodel.ReservasViewModel
+import dam.intermodular.app.login.presentation.viewModel.LoginViewModel
 import dam.intermodular.app.ui.theme.Purple40
 import java.util.Calendar
 import java.text.SimpleDateFormat
@@ -35,13 +40,18 @@ fun ReservarHabitacionScreen(
     precioNoche: String,
     maxHuespedes: Int,
     usuarioId: String,
-    reservaViewModel: ReservasViewModel = viewModel()
+    reservaViewModel: ReservasViewModel = viewModel(),
+    userViewModel: LoginViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
+    val dataStoreManager = remember { DataStoreManager(context) }
+
     var fechaEntrada by remember { mutableStateOf("") }
     var fechaSalida by remember { mutableStateOf("") }
     var numHuespedes by remember { mutableStateOf("") }
     var isSaving by remember { mutableStateOf(false) }
+
+    val userId by dataStoreManager.getIdProfile().collectAsState(initial = null)
 
     val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
@@ -100,8 +110,8 @@ fun ReservarHabitacionScreen(
                     .fillMaxWidth()
                     .border(2.dp, Color.Gray, shape = RoundedCornerShape(10.dp))
                     .padding(12.dp)
-                    .background(color = Color(0xFFD1C4E9))
             ) {
+                Text(text = "ID Usuario: $userId", fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
                 Text(text = "ID Habitación: $habitacionId", fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
                 Text(text = "Nombre: $habitacionNombre", fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
                 Text(text = "Precio por noche: $precioNoche€", fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
@@ -161,20 +171,15 @@ fun ReservarHabitacionScreen(
                             return@Button
                         }
 
+                        if(userId == null) {
+                            Toast.makeText(context, "No se pudo obtener el ID del usuario", Toast.LENGTH_SHORT).show()
+                            return@Button
+                        }
+
                         isSaving = true
 
-                        val nuevaReserva = NuevaReserva(
-                            idUsu = usuarioId,
-                            idHab = habitacionId,
-                            fechaEntrada = fechaEntrada,
-                            fechaSalida = fechaSalida,
-                            estado = "Pendiente"
-                        )
-
-                        Log.d("CREATE_RESERVA", "Enviando reserva: $nuevaReserva")
-
                         reservaViewModel.createReserva(
-                            idUsu = usuarioId,
+                            idUsu = userId.toString(),
                             idHab = habitacionId,
                             fechaEntrada = fechaEntrada,
                             fechaSalida = fechaSalida,
@@ -190,8 +195,7 @@ fun ReservarHabitacionScreen(
                             }
                         )
                     },
-                    enabled = !isSaving,
-                    colors = ButtonDefaults.buttonColors(containerColor = Purple40)
+                    enabled = !isSaving
                 ) {
                     if (isSaving) {
                         CircularProgressIndicator(color = Color.White, modifier = Modifier.size(20.dp))

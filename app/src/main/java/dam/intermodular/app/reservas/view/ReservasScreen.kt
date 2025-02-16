@@ -13,6 +13,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -20,19 +21,29 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.google.gson.Gson
+import dam.intermodular.app.core.dataStore.DataStoreManager
 import dam.intermodular.app.reservas.model.Reservas
 import dam.intermodular.app.reservas.viewmodel.ReservasViewModel
 import dam.intermodular.app.ui.theme.Purple40
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ReservasScreen(navController: NavHostController, reservaViewModel: ReservasViewModel = viewModel()) {
+fun ReservasScreen(
+    navController: NavHostController,
+    reservaViewModel: ReservasViewModel = viewModel()
+) {
+    val context = LocalContext.current
+    val dataStoreManager = remember { DataStoreManager(context) } // Inicializar DataStoreManager
+    val userId by dataStoreManager.getIdProfile().collectAsState(initial = null) // Obtener el ID del usuario logueado
     val reservas by reservaViewModel.reservas.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         Log.d("DEBUG", "Ejecutando ReservasScreen()")
         reservaViewModel.getAllReservas()
     }
+
+    // Filtrar reservas solo para el usuario actual
+    val reservasUsuario = reservas.filter { it.idUsu == userId }
 
     Scaffold(
         topBar = {
@@ -61,16 +72,23 @@ fun ReservasScreen(navController: NavHostController, reservaViewModel: ReservasV
                 .padding(paddingValues)
                 .padding(16.dp)
         ) {
-            if (reservas.isEmpty()) {
+            if (userId == null) {
                 Text(
-                    text = "No hay reservas disponibles.",
+                    text = "Cargando usuario...",
+                    color = Color.DarkGray,
+                    fontSize = 18.sp,
+                    modifier = Modifier.fillMaxWidth().wrapContentSize()
+                )
+            } else if (reservasUsuario.isEmpty()) {
+                Text(
+                    text = "No tienes ninguna Reserva.",
                     color = Color.DarkGray,
                     fontSize = 18.sp,
                     modifier = Modifier.fillMaxWidth().wrapContentSize()
                 )
             } else {
                 LazyColumn(modifier = Modifier.fillMaxSize()) {
-                    items(reservas) { reserva ->
+                    items(reservasUsuario) { reserva ->
                         ReservaItem(
                             reserva = reserva,
                             onInfoClick = {

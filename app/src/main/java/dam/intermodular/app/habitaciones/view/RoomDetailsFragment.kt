@@ -49,11 +49,21 @@ fun RoomDetailsFragment(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
-        ){
+        ) {
             IconButton(onClick = {
-                when(previousScreen) {
-                    "main_screen" -> navController.navigate("main_screen") { popUpTo("main_screen") { inclusive = true } }
-                    "favorites_screen" -> navController.navigate("favorites_screen") { popUpTo("favorites_screen") { inclusive = true } }
+                when (previousScreen) {
+                    "main_screen" -> navController.navigate("main_screen") {
+                        popUpTo("main_screen") {
+                            inclusive = true
+                        }
+                    }
+
+                    "favorites_screen" -> navController.navigate("favorites_screen") {
+                        popUpTo("favorites_screen") {
+                            inclusive = true
+                        }
+                    }
+
                     else -> navController.popBackStack()
                 }
             }) {
@@ -172,7 +182,6 @@ fun RoomDetailsFragment(
                 navController.navigate("reservar_habitacion/$roomId/$roomName/$roomPrice/$maxHuespedes/$usuarioId")
             },
             modifier = Modifier
-<<<<<<< HEAD:app/src/main/java/dam/intermodular/app/habitaciones/RoomDetailsFragment.kt
                 .fillMaxWidth()
                 .padding(16.dp)
                 .height(56.dp)
@@ -181,20 +190,11 @@ fun RoomDetailsFragment(
             Text(
                 text = "Reservar ahora",
                 fontSize = 20.sp,
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Center
-=======
-                .fillMaxWidth() // Hace que el botón ocupe el ancho
-                .padding(16.dp) // Añade un poco de espacio alrededor del botón
-                .height(50.dp) // Cambia la altura del botón (puedes ajustar este valor)
-                .align(Alignment.CenterHorizontally) // Centra el botón horizontalmente
-        ) {
-            Text(
-                text = "Reservar ahora",
-                fontSize = 18.sp, // Cambia el tamaño de la fuente (ajusta a tu preferencia)
-                modifier = Modifier.fillMaxWidth(), // Asegura que el texto ocupe el ancho disponible
-                textAlign = TextAlign.Center // Centra el texto dentro del botón
->>>>>>> 0d22c97198aa666cb96a1d58b5bca9f90245c55b:app/src/main/java/dam/intermodular/app/habitaciones/view/RoomDetailsFragment.kt
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .fillMaxWidth() // Ocupa todo el ancho
+                    .padding(5.dp) // Espacio alrededor
+                    .height(50.dp) // Altura del texto
             )
         }
     }

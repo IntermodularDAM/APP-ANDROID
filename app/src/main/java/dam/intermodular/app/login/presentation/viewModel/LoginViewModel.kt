@@ -14,6 +14,7 @@ import dam.intermodular.app.login.data.LoginResponse
 import dam.intermodular.app.login.domain.LogInRepository
 import dam.intermodular.app.login.presentation.model.LogInModel
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import javax.inject.Inject
 
 @HiltViewModel
@@ -65,6 +66,13 @@ class LoginViewModel @Inject constructor(
                     Log.d("Init VM_Login","No hay token")
                     _authState.value = "No hay token"
                 }
+            }
+            val idProfile = dataStoreManager.getIdProfile().firstOrNull() // Recupera el ID del usuario
+            if (!idProfile.isNullOrEmpty()) {
+                _userId.value = idProfile // Actualiza el `StateFlow`
+                Log.d("LoginViewModel", "ID del usuario cargado: $idProfile")
+            } else {
+                Log.e("LoginViewModel", "No se encontró un ID de usuario en DataStore")
             }
         }
     }

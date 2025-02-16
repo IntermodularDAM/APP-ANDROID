@@ -8,12 +8,14 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.LiveData
-import dam.intermodular.app.habitaciones.Habitacion
+import dam.intermodular.app.habitaciones.model.Habitacion
 import dam.intermodular.app.reservas.model.Reservas
 import dam.intermodular.app.reservas.api.RetrofitClient
 import dam.intermodular.app.reservas.model.NuevaReserva
+import dam.intermodular.app.login.presentation.viewModel.LoginViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.firstOrNull
 
 class ReservasViewModel : ViewModel() {
     private val _reservas = MutableStateFlow<List<Reservas>>(emptyList())
@@ -26,9 +28,9 @@ class ReservasViewModel : ViewModel() {
     fun getAllReservas() {
         viewModelScope.launch {
             try {
-                Log.d("API_CALL", "Llamando a la API para obtener reservas...") // ✅ DEBUG 1
+                Log.d("API_CALL", "Llamando a la API para obtener reservas...")
                 val response = RetrofitClient.reservaApiService.getAllReservas()
-                Log.d("API_RESPONSE", "Reservas recibidas: $response") // ✅ DEBUG 2
+                Log.d("API_RESPONSE", "Reservas recibidas: $response")
 
                 if (response.reservas.isNotEmpty()) {
                     Log.d("API_RESPONSE", "Lista de reservas obtenida: ${response.reservas}")
@@ -55,16 +57,27 @@ class ReservasViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val updatedReserva = Reservas(reservaId, idUser, idHabt, fechaEntrada, fechaSalida, estado)
-                RetrofitClient.reservaApiService.updateReserva(reservaId, updatedReserva)
-                onSuccess()
+                Log.d("UPDATE_RESERVA", "Enviando actualización: $updatedReserva")
+
+                val response = RetrofitClient.reservaApiService.updateReserva(reservaId, updatedReserva)
+                Log.d("UPDATE_RESERVA_API", "Respuesta de la API: $response")
+
+                if (response.isSuccessful) {
+                    Log.d("UPDATE_RESERVA_SUCCESS", "Reserva actualizada correctamente: ${response.body()}")
+                    onSuccess()
+                } else {
+                    Log.e("UPDATE_RESERVA_ERROR", "Error en la API: ${response.code()} - ${response.message()}")
+                    onError()
+                }
             } catch (e: Exception) {
+                Log.e("UPDATE_RESERVA_ERROR", "Excepción en la actualización: ${e.message}", e)
                 onError()
             }
         }
     }
 
     fun createReserva(
-        idUsu: String = "U-002",
+        idUsu: String,
         idHab: String,
         fechaEntrada: String,
         fechaSalida: String,
@@ -73,6 +86,8 @@ class ReservasViewModel : ViewModel() {
         onError: (String) -> Unit
     ) {
         viewModelScope.launch {
+            Log.d("USER_ID", "ID del usuario obtenido: $idUsu") // Depuración
+
             try {
                 val nuevaReserva = NuevaReserva(idUsu, idHab, fechaEntrada, fechaSalida, estado)
                 val response = RetrofitClient.reservaApiService.createReserva(nuevaReserva)
@@ -84,5 +99,4 @@ class ReservasViewModel : ViewModel() {
             }
         }
     }
-
 }
