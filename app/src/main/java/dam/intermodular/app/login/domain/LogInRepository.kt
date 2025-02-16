@@ -21,7 +21,8 @@ class LogInRepository @Inject constructor (
                     dataStoreManager.guardarTokens(
                         loginResponse.data.token,
                         loginResponse.data.appToken,
-                        loginResponse.data.user.rol
+                        loginResponse.data.user.rol,
+                        loginResponse.data.user._id
                     )
                     Result.success(loginResponse)
                 }else{

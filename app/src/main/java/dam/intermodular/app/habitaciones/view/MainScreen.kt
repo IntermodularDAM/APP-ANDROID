@@ -1,7 +1,8 @@
-package dam.intermodular.app.habitaciones
+package dam.intermodular.app.habitaciones.view
 
 import android.annotation.SuppressLint
 import android.graphics.BitmapFactory
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -20,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
@@ -28,6 +30,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import dam.intermodular.app.R
+import dam.intermodular.app.habitaciones.model.Habitacion
+import dam.intermodular.app.habitaciones.viewModel.HabitacionesViewModel
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 import java.util.Base64
@@ -52,6 +56,8 @@ fun MainScreen(navController: NavHostController, habitacionesViewModel: Habitaci
     val showFilterDialog = remember { mutableStateOf(false) }
     var showNotification by remember { mutableStateOf(false) }
     val searchQuery = remember { mutableStateOf("") }
+
+    val context = LocalContext.current
 
     LaunchedEffect(searchQuery.value) {
         habitacionesViewModel.filterByName(searchQuery.value)
@@ -131,7 +137,7 @@ fun MainScreen(navController: NavHostController, habitacionesViewModel: Habitaci
 
             if (filteredHabitaciones.isEmpty()) {
                 Text(
-                    text = "No rooms available",
+                    text = "No hay habitaciones disponibles",
                     style = MaterialTheme.typography.titleLarge,
                     color = Color.Red,
                     modifier = Modifier.fillMaxWidth().padding(16.dp),
@@ -192,11 +198,25 @@ fun MainScreen(navController: NavHostController, habitacionesViewModel: Habitaci
             horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.Bottom
         ) {
-            IconButton(onClick = { navController.navigate("home_screen") }) {
+            IconButton(onClick = { navController.navigate("main_screen") } ) {
                 Icon(Icons.Filled.Home, contentDescription = "Home")
             }
+<<<<<<< HEAD:app/src/main/java/dam/intermodular/app/habitaciones/MainScreen.kt
             IconButton(onClick = { navController.navigate("reservas_screen") }) {
                 Icon(Icons.Filled.Search, contentDescription = "Historial")
+=======
+            IconButton(
+                onClick = {
+                    // Mostrar mensaje (Toast) cada vez que se pulse el botón
+                    Toast.makeText(
+                        context,
+                        "¡BIENVENIDOS A NIGHT DAYS!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            ) {
+                Icon(Icons.Filled.Info, contentDescription = "Info")
+>>>>>>> 0d22c97198aa666cb96a1d58b5bca9f90245c55b:app/src/main/java/dam/intermodular/app/habitaciones/view/MainScreen.kt
             }
             IconButton(onClick = { navController.navigate("favorites_screen") }) {
                 Icon(Icons.Filled.Favorite, contentDescription = "Favorite")
@@ -207,7 +227,6 @@ fun MainScreen(navController: NavHostController, habitacionesViewModel: Habitaci
         }
     }
 }
-
 
 @SuppressLint("DefaultLocale")
 @Composable
